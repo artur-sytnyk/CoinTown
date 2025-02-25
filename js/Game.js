@@ -7,6 +7,8 @@ export class Game {
         this.fps = Constants.FPS;
         this.updateInterval = 250; // 250ms = 4 times per second
         this.updateCounter = 0;
+        this.speedMultiplier = 1;
+        this.gameState = new GameState();
         console.info('Game created');
     }
 

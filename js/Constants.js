@@ -4,7 +4,20 @@ export const Constants = {
     ZOOM_MIN: 0.10,
     FPS: 60,
 
+    // Colors
+    COLOR_CANVAS_BG: '#03c04a80',
+    COLOR_TOWN_BORDER: '#505050',
+    COLOR_ROAD: '#909090',
+    COLOR_GOLD: 'gold',
+    COLOR_RESIDENT: '#5adc5a',
+    COLOR_COMMERCIAL: '#5a5adc',
+    COLOR_FACTORY: '#dc8c3c',
+
     // Game logic constants
+    SMALL_TOWN_SIZE: 2000,
+    MEDIUM_TOWN_SIZE: 3000,
+    LARGE_TOWN_SIZE: 5000,
+    // Node constants
     NODE_RANGE: 100, // Max range of node connections
     NODE_SIZE: 10, // Node radius
     HAPPINESS_LIMIT: 100,

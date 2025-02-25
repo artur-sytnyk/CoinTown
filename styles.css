@@ -2,13 +2,15 @@ body, html {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
 }
 
-#canvas {
-    display: block;
+.canvas-wrapper {
     position: absolute;
+    z-index: 0;
+    display: block;
+    overflow: hidden;
     top: 0;
     left: 0;
     width: 100%;
@@ -16,4 +18,114 @@ body, html {
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
                       linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
     background-size: 1rem 1rem;
+    background-color: #70e69d;
+}
+
+#canvas {
+    background-color: #fff;
+}
+
+button {
+    background-color: #ffe345;
+    border: 2px solid #333;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-inline: 0.5rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: gold;
+    color: #fff;
+}
+
+.menu-button {
+    background-color: #ffe345;
+    border: 2px solid #333;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    left: -5px;
+    padding: 10px 16px;
+    position: absolute;
+    top: -5px;
+    cursor: pointer;
+}
+
+.menu-button:hover {
+    background-color: gold;
+    color: #fff;
+}
+
+.menu-button:hover .menu-content {
+    display: flex;
+    flex-direction: row;
+}
+
+.menu-content {
+    background-color: transparent;
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 3rem;
+    padding-left: 1rem;
+}
+
+.menu-content button {
+   font-size: 1rem;
+   margin-top: 10px;
+   min-width: fit-content;
+   padding: 0.5rem;
+}
+
+.coins-display {
+    font-size: 1.5rem;
+    left: 50%;
+    position: absolute;
+    top: 10px;
+    transform: translateX(-50%);
+}
+
+.zoom-controls {
+    bottom: 10px;
+    left: 10px;
+    position: absolute;
+}
+
+.buy-buttons-container {
+    bottom: 10px;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    width: fit-content;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.green {
+    background-color: #5adc5a;
+}
+.green:hover {
+    background-color: #5adc5a;
+    color: white;
+}
+.blue {
+    background-color: #5a5adc;
+}
+.blue:hover {
+    background-color: #5a5adc;
+    color: white;
+}
+.orange {
+    background-color: #dc8c3c;
+}
+.orange:hover {
+    background-color: #dc8c3c;
+    color: white;
+}
+
+.simulation-control-buttons {
+    bottom: 10px;
+    position: absolute;
+    right: 10px;
 }

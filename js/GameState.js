@@ -10,6 +10,7 @@ export class GameState {
             factory: 0
         };
         this.nodes = [];
+        console.info('GameState created');
     }
 
     addNode(node) {
