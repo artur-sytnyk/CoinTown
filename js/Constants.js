@@ -17,6 +17,7 @@ export const Constants = {
     SMALL_TOWN_SIZE: 2000,
     MEDIUM_TOWN_SIZE: 3000,
     LARGE_TOWN_SIZE: 5000,
+
     // Node constants
     NODE_RANGE: 100, // Max range of node connections
     NODE_SIZE: 10, // Node radius
@@ -26,6 +27,7 @@ export const Constants = {
     FACTORY_DISGUST_RANGE: 15,
     COMMUTE_RANGE: 200,
     DELIVERY_RANGE: 25,
+    
     // GameState constants
     STARTING_COINS: 1000,
     COST_INCREASE_R: 10,

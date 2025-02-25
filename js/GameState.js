@@ -1,5 +1,5 @@
 import { Constants } from "./Constants.js";
-import { Resident, Commercial, Factory } from './GameNode.js';
+import { Resident, Commercial, Factory, CentralNode } from './GameNode.js';
 
 export class GameState {
     constructor(size = Constants.SMALL_TOWN_SIZE) {
@@ -9,8 +9,8 @@ export class GameState {
             commercial: 0,
             factory: 0
         };
-        this.nodes = [];
         this.size = size;
+        this.nodes = [ new CentralNode(size/2, size/2) ];
         console.info('GameState created');
     }
 
