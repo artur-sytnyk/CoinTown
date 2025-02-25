@@ -1,15 +1,21 @@
-import { Constants } from "./Constants";
+import { Constants } from "./Constants.js";
+import { GameState } from "./GameState.js";
 
 export class Game {
-    constructor() {
-        this.lastTimestamp = 0;
+    constructor(size) {
+        this.gameState = new GameState(size);
+        this.screen = null; // for screen DI
         this.isRunning = false;
-        this.fps = Constants.FPS;
-        this.updateInterval = 250; // 250ms = 4 times per second
         this.updateCounter = 0;
+        this.updateInterval = 250; // 250ms = 4 times per second
+        this.lastTimestamp = 0;
+        this.lastUpdateDeltaTime = 0;
         this.speedMultiplier = 1;
-        this.gameState = new GameState();
         console.info('Game created');
+    }
+
+    setScreen(screen) {
+        this.screen = screen;
     }
 
     start() {
@@ -24,20 +30,29 @@ export class Game {
     gameLoop(timestamp) {
         if (!this.isRunning) return;
 
-        const deltaTime = (timestamp - this.lastTimestamp) / 1000;
+        // Accumulate update delta time
+        this.lastUpdateDeltaTime += (timestamp - this.lastTimestamp) / 1000;
         this.lastTimestamp = timestamp;
 
-        this.update(deltaTime);
-        this.render();
-
+        // Update if interval reached.
+        if (this.lastUpdateDeltaTime >= this.updateInterval / 1000) {
+            this.update();
+            if(this.screen) this.screen.render();
+            this.lastUpdateDeltaTime -= this.updateInterval / 1000;
+        }
+        
         requestAnimationFrame(this.gameLoop.bind(this));
     }
 
-    update(deltaTime) {
-        // game logic update
+    update() {
+        this.updateCounter++;
+        // game logic update - node gains and checks
     }
 
-    render() {
-        // render game
+
+
+    // Additional Functions
+    setTownSize(size) {
+        this.gameState.size = size;
     }
 }

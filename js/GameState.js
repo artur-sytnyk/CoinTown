@@ -1,8 +1,8 @@
-import { Constants } from "./Constants";
+import { Constants } from "./Constants.js";
 import { Resident, Commercial, Factory } from './GameNode.js';
 
 export class GameState {
-    constructor() {
+    constructor(size = Constants.SMALL_TOWN_SIZE) {
         this.coins = Constants.STARTING_COINS;
         this.nodeCosts = {
             resident: 0,
@@ -10,6 +10,7 @@ export class GameState {
             factory: 0
         };
         this.nodes = [];
+        this.size = size;
         console.info('GameState created');
     }
 
@@ -18,7 +19,7 @@ export class GameState {
     }
 
     removeNode(node) {
-        this.nodes.filter(n => n !== node);
+        this.nodes = this.nodes.filter(n => n !== node);
     }
 
     spawnNode(node) {
@@ -55,14 +56,26 @@ export class GameState {
         this.nodes = [];
     }
 
-    load(data) {
+    load(data) { 
         if(!data) {
             log.warn('No data to load');
             return
         }
         this.coins = data.coins;
         this.nodeCosts = data.nodeCosts;
-        this.nodes = data.nodes;
+        this.nodes = data.nodes; // TODO not sure
+    }
+
+    canAffordResident() {
+        return this.coins >= this.nodeCosts.resident;
+    }
+
+    canAffordCommercial() {
+        return this.coins >= this.nodeCosts.commercial;
+    }
+
+    canAffordFactory() {
+        return this.coins >= this.nodeCosts.factory;
     }
 
 }
