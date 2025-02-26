@@ -11,9 +11,34 @@ export class GameState {
         };
         this.size = size;
         this.nodes = [ new CentralNode(size/2, size/2) ];
+        this.updateCoinsDisplay();
         console.info('GameState created');
     }
 
+    // GameState
+    restart() {
+        this.coins = Constants.STARTING_COINS;
+        this.nodeCosts = {
+            resident: 0,
+            commercial: 0,
+            factory: 0
+        };
+        this.nodes = [];
+        this.updateCoinsDisplay();
+    }
+
+    load(data) { 
+        if(!data) {
+            log.warn('No data to load');
+            return
+        }
+        this.coins = data.coins;
+        this.nodeCosts = data.nodeCosts;
+        this.nodes = data.nodes; // TODO not sure
+        this.updateCoinsDisplay();
+    }
+
+    // Nodes
     addNode(node) {
         this.nodes.push(node);
     }
@@ -35,6 +60,7 @@ export class GameState {
             this.coins -= this.nodeCosts.commercial;
         else if(node instanceof Factory)
             this.coins -= this.nodeCosts.factory;
+        this.updateCoinsDisplay();
     }
 
     increaseCost(node) {
@@ -46,24 +72,10 @@ export class GameState {
             this.nodeCosts.factory += Constants.COST_INCREASE_F;
     }
 
-    restart() {
-        this.coins = Constants.STARTING_COINS;
-        this.nodeCosts = {
-            resident: 0,
-            commercial: 0,
-            factory: 0
-        };
-        this.nodes = [];
-    }
-
-    load(data) { 
-        if(!data) {
-            log.warn('No data to load');
-            return
-        }
-        this.coins = data.coins;
-        this.nodeCosts = data.nodeCosts;
-        this.nodes = data.nodes; // TODO not sure
+    // Game logic
+    addCoins(amount) {
+        this.coins += amount;
+        this.updateCoinsDisplay();
     }
 
     canAffordResident() {
@@ -78,4 +90,8 @@ export class GameState {
         return this.coins >= this.nodeCosts.factory;
     }
 
+    // Additional functions
+    updateCoinsDisplay() {
+        document.getElementById('coins').innerText = this.coins;
+    }
 }
