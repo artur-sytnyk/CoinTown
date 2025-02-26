@@ -29,17 +29,20 @@ export class Game {
 
     gameLoop(timestamp) {
         if (!this.isRunning) return;
+        const speedAffectedInterval = this.updateInterval / this.speedMultiplier;
 
         // Accumulate update delta time
         this.lastUpdateDeltaTime += (timestamp - this.lastTimestamp) / 1000;
         this.lastTimestamp = timestamp;
 
         // Update if interval reached.
-        if (this.lastUpdateDeltaTime >= this.updateInterval / 1000) {
+        if (this.lastUpdateDeltaTime >= speedAffectedInterval / 1000) {
             this.update();
             if(this.screen) this.screen.render();
-            this.lastUpdateDeltaTime -= this.updateInterval / 1000;
+            console.log('interval render', speedAffectedInterval)
+            this.lastUpdateDeltaTime -= speedAffectedInterval / 1000;
         }
+
         
         requestAnimationFrame(this.gameLoop.bind(this));
     }
