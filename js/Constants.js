@@ -1,7 +1,9 @@
 export const Constants = {
     // Screen/Rendering constants
-    ZOOM_MAX: 2,
-    ZOOM_MIN: 0.10,
+    ZOOM_MAX: 2.2,
+    ZOOM_MIN: 0.1,
+    ZOOM_BTN_FACTOR: 0.4,
+    ZOOM_MOUSE_FACTOR: 0.2,
     FPS: 60,
 
     // Colors
@@ -27,7 +29,7 @@ export const Constants = {
     FACTORY_DISGUST_RANGE: 15,
     COMMUTE_RANGE: 200,
     DELIVERY_RANGE: 25,
-    
+
     // GameState constants
     STARTING_COINS: 1000,
     COST_INCREASE_R: 10,
