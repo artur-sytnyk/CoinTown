@@ -31,7 +31,7 @@ export const Constants = {
     DELIVERY_RANGE: 25,
 
     // GameState constants
-    STARTING_COINS: 1000,
+    STARTING_COINS: 30,
     COST_INCREASE_R: 10,
     COST_INCREASE_C: 20,
     COST_INCREASE_F: 20,

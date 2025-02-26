@@ -12,6 +12,8 @@ export class Screen {
         this.offset = { x: 0, y: 0 };
 
         this.isDragging = false;
+        this.placingNode = null;
+        this.mouse = { x: 0, y: 0 };
 
         this.initCanvas();
         this.setupEventListeners();
@@ -65,6 +67,19 @@ export class Screen {
         });
 
         // Draw other stuff like gained coins
+
+        // Draw node placing
+        if(this.placingNode) {
+            const color = this.placingNode === 'resident' ? Constants.COLOR_RESIDENT :
+                this.placingNode === 'commercial' ? Constants.COLOR_COMMERCIAL : Constants.COLOR_FACTORY;
+            const mouseX = (this.mouse.x - this.offset.x) / this.zoomLevel;
+            const mouseY = (this.mouse.y - this.offset.y) / this.zoomLevel;
+            // console.log('render placing:',mouseX, mouseY);
+            this.ctx.fillStyle = color;
+            this.ctx.beginPath();
+            this.ctx.arc(mouseX, mouseY, Constants.NODE_SIZE, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     // ### ### ### ### ### Additional Functions ### ### ### ### ###
@@ -95,6 +110,22 @@ export class Screen {
         zoomLevelEl.innerText = this.zoomLevel.toFixed(2);
     }
 
+    placeNode(type) {
+        this.placingNode = type;
+        const handleClick = (event) => {
+            this.spawnNode(type, event);
+            this.canvas.removeEventListener('click', handleClick);
+        };
+        this.canvas.addEventListener('click', handleClick);
+    }
+
+    spawnNode(nodeType, event) {
+        this.placingNode = null;
+        const x = (event.clientX - this.offset.x ) / this.zoomLevel;
+        const y = (event.clientY - this.offset.y ) / this.zoomLevel;
+        this.game.spawnNode(nodeType, x, y);
+    }
+
     // ### ### ### ### ### Event Listeners ### ### ### ### ###
     onResize() {
         this.canvas.width = window.innerWidth;
@@ -123,6 +154,11 @@ export class Screen {
             event.preventDefault();
             this.offset.x = event.clientX - this.dragStart.x;
             this.offset.y = event.clientY - this.dragStart.y;
+            this.render();
+        }
+        if (this.placingNode) {
+            this.mouse.x = event.clientX;
+            this.mouse.y = event.clientY;
             this.render();
         }
     }

@@ -1,5 +1,6 @@
 import { Constants } from "./Constants.js";
 import { GameState } from "./GameState.js";
+import { Resident, Commercial, Factory } from "./GameNode.js";
 
 export class Game {
     constructor(size) {
@@ -16,6 +17,7 @@ export class Game {
 
     setScreen(screen) {
         this.screen = screen;
+        this.screen.render();
     }
 
     start() {
@@ -38,12 +40,11 @@ export class Game {
         // Update if interval reached.
         if (this.lastUpdateDeltaTime >= speedAffectedInterval / 1000) {
             this.update();
-            if(this.screen) this.screen.render();
-            console.log('interval render', speedAffectedInterval)
+            if (this.screen) this.screen.render();
             this.lastUpdateDeltaTime -= speedAffectedInterval / 1000;
         }
 
-        
+
         requestAnimationFrame(this.gameLoop.bind(this));
     }
 
@@ -57,5 +58,46 @@ export class Game {
     // Additional Functions
     setTownSize(size) {
         this.gameState.size = size;
+    }
+
+    spawnNode(nodeType, x, y) {
+        if(this.isAbleToSpawn(x, y)) {
+            this.createNode(nodeType, x, y);
+        } else {
+            window.alert.show('Cannot spawn node there');
+        }
+    }
+
+    isAbleToSpawn(x, y) {
+        // Cannot spawn on top of other nodes, inverse search
+        const onTopOfNode = this.gameState.nodes.some(node => {
+            return Math.hypot(node.x - x, node.y - y) < Constants.NODE_SIZE * 2;
+        });
+        // Must be in spawning range near other nodes
+        const inSpawningRange = this.gameState.nodes.some(node => {
+            return Math.hypot(node.x - x, node.y - y) <= Constants.NODE_RANGE;
+        });
+        // Must be in town area
+        const inTownArea = x - Constants.NODE_SIZE > 0 && 
+                        x + Constants.NODE_SIZE < this.gameState.size &&
+                        y - Constants.NODE_SIZE > 0 &&
+                        y + Constants.NODE_SIZE < this.gameState.size;
+        return !onTopOfNode && inSpawningRange && inTownArea;
+    }
+
+    createNode(nodeType, x, y) {
+        switch (nodeType) {
+            case 'resident':
+                this.gameState.spawnNode(new Resident(x, y));
+                break;
+            case 'commercial':
+                this.gameState.spawnNode(new Commercial(x, y));
+                break;
+            case 'factory':
+                this.gameState.spawnNode(new Factory(x, y));
+                break;
+            default:
+                console.error('Unknown node type');
+        }
     }
 }

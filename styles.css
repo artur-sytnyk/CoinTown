@@ -126,8 +126,31 @@ button:hover {
     color: white;
 }
 
+.btn-disabled{
+    pointer-events: none;
+    opacity: 0.5;
+}
+
 .simulation-control-buttons {
     bottom: 10px;
     position: absolute;
     right: 10px;
+}
+
+.alert {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    font-size: 1rem;
+    z-index: 1000;
+}
+
+.alert.show {
+    display: block;
 }

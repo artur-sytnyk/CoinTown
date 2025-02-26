@@ -11,11 +11,11 @@ export class GameState {
         };
         this.size = size;
         this.nodes = [ new CentralNode(size/2, size/2) ];
-        this.updateCoinsDisplay();
+        this.onCoinsChange();
         console.info('GameState created');
     }
 
-    // GameState
+    // GameState / savegame functions
     restart() {
         this.coins = Constants.STARTING_COINS;
         this.nodeCosts = {
@@ -24,7 +24,7 @@ export class GameState {
             factory: 0
         };
         this.nodes = [];
-        this.updateCoinsDisplay();
+        this.onCoinsChange();
     }
 
     load(data) { 
@@ -35,10 +35,10 @@ export class GameState {
         this.coins = data.coins;
         this.nodeCosts = data.nodeCosts;
         this.nodes = data.nodes; // TODO not sure
-        this.updateCoinsDisplay();
+        this.onCoinsChange();
     }
 
-    // Nodes
+    // Node functions
     addNode(node) {
         this.nodes.push(node);
     }
@@ -51,6 +51,8 @@ export class GameState {
         this.payForNode(node);
         this.addNode(node);
         this.increaseCost(node);
+        this.onCoinsChange();
+        this.onCostsChange();
     }
 
     payForNode(node) {
@@ -60,7 +62,6 @@ export class GameState {
             this.coins -= this.nodeCosts.commercial;
         else if(node instanceof Factory)
             this.coins -= this.nodeCosts.factory;
-        this.updateCoinsDisplay();
     }
 
     increaseCost(node) {
@@ -75,7 +76,6 @@ export class GameState {
     // Game logic
     addCoins(amount) {
         this.coins += amount;
-        this.updateCoinsDisplay();
     }
 
     canAffordResident() {
@@ -91,7 +91,19 @@ export class GameState {
     }
 
     // Additional functions
-    updateCoinsDisplay() {
+    onCoinsChange() {
         document.getElementById('coins').innerText = this.coins;
+        if(!this.canAffordResident()) document.getElementById('buyResidentBtn').classList.add("btn-disabled");
+        else document.getElementById('buyResidentBtn').classList.remove("btn-disabled");
+        if(!this.canAffordCommercial()) document.getElementById('buyCommercialBtn').classList.add("btn-disabled");
+        else document.getElementById('buyCommercialBtn').classList.remove("btn-disabled");
+        if(!this.canAffordFactory()) document.getElementById('buyFactoryBtn').classList.add("btn-disabled");
+        else document.getElementById('buyFactoryBtn').classList.remove("btn-disabled");
+    }
+
+    onCostsChange() {
+        document.getElementById('rCost').innerText = this.nodeCosts.resident;
+        document.getElementById('cCost').innerText = this.nodeCosts.commercial;
+        document.getElementById('fCost').innerText = this.nodeCosts.factory;
     }
 }

@@ -2,7 +2,7 @@
 import { Constants } from './Constants.js';
 import { Game } from './Game.js';
 import { Screen } from './Screen.js';
-import { GameState } from './GameState.js';
+import { Alert } from './Alert.js';
 
 class App {
     constructor() {
@@ -14,6 +14,7 @@ class App {
     init() {
         console.info('App initialized');
         this.setupButtonListeners();
+        this.gameStateToggle(); // manual start
     }
 
     initGame(townSize) {
@@ -44,6 +45,7 @@ class App {
         document.getElementById('gameStateToggle').addEventListener('click', this.gameStateToggle.bind(this));
         document.getElementById('simulationSpeedBtn').addEventListener('click', this.speedToggle.bind(this));
         document.getElementById('restartBtn').addEventListener('click', this.restartGame.bind(this));
+        this.setupBuyButtons();
     }
 
     gameStateToggle() {
@@ -64,9 +66,21 @@ class App {
         }
         document.getElementById('speed').innerText = 'x' + this.game.speedMultiplier;
     }
+
+    setupBuyButtons() {
+        document.getElementById('buyResidentBtn').addEventListener('click', () => this.buyNode('resident'));
+        document.getElementById('buyCommercialBtn').addEventListener('click', () => this.buyNode('commercial'));
+        document.getElementById('buyFactoryBtn').addEventListener('click', () => this.buyNode('factory'));
+    }
+
+    buyNode(type) {
+        this.screen.placeNode(type);
+    }
 }
 
 window.onload = () => {
+    const alert = new Alert();
+    window.alert = alert;
     const app = new App();
     app.init();
 }
