@@ -23,6 +23,7 @@ export const Constants = {
     // Node constants
     NODE_RANGE: 100, // Max range of node connections
     NODE_SIZE: 10, // Node radius
+    CONNECTIONS_LIMIT: 5,
     HAPPINESS_LIMIT: 100,
     SHOPPING_RANGE: 20,
     SHOPPING_CHAIN_RANGE: 10,

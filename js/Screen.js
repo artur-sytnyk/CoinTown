@@ -57,7 +57,12 @@ export class Screen {
             }
         }
 
-        // Draw node roads? (connections)
+        // Roads
+        this.game.gameState.connections.forEach(con => {
+            if(this.isVisible(con.nodeA) && this.isVisible(con.nodeB)) {
+                con.render(this.ctx);
+            }
+        });
 
         // Visible nodes
         this.game.gameState.nodes.forEach(node => {
@@ -82,6 +87,7 @@ export class Screen {
     }
 
     // ### ### ### ### ### Additional Functions ### ### ### ### ###
+
     isVisible(node) {
         const nodeSize = Constants.NODE_SIZE * this.zoomLevel;
         const left = (-this.offset.x) / this.zoomLevel;
@@ -129,6 +135,7 @@ export class Screen {
     }
 
     // ### ### ### ### ### Event Listeners ### ### ### ### ###
+
     onResize() {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;

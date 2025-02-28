@@ -75,9 +75,10 @@ export class Game {
         const onTopOfNode = this.gameState.nodes.some(node => {
             return Math.hypot(node.x - x, node.y - y) < Constants.NODE_SIZE * 2;
         });
-        // Must be in spawning range near other nodes
+        // Must be in spawning range near other nodes which can connect
         const inSpawningRange = this.gameState.nodes.some(node => {
-            return Math.hypot(node.x - x, node.y - y) <= Constants.NODE_RANGE;
+            return node.isConnectable() &&
+                Math.hypot(node.x - x, node.y - y) <= Constants.NODE_RANGE;
         });
         // Must be in town area
         const inTownArea = x - Constants.NODE_SIZE > 0 &&
