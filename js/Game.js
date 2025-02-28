@@ -1,6 +1,7 @@
 import { Constants } from "./Constants.js";
 import { GameState } from "./GameState.js";
 import { Resident, Commercial, Factory } from "./GameNode.js";
+import { capitalize } from './utils.js';
 
 export class Game {
     constructor(size) {
@@ -61,10 +62,11 @@ export class Game {
     }
 
     spawnNode(nodeType, x, y) {
-        if(this.isAbleToSpawn(x, y)) {
+        if (this.isAbleToSpawn(x, y)) {
             this.createNode(nodeType, x, y);
+            alert.success(capitalize(nodeType) + ' built');
         } else {
-            window.alert.show('Cannot spawn node there');
+            alert.error('Cannot build there');
         }
     }
 
@@ -78,10 +80,10 @@ export class Game {
             return Math.hypot(node.x - x, node.y - y) <= Constants.NODE_RANGE;
         });
         // Must be in town area
-        const inTownArea = x - Constants.NODE_SIZE > 0 && 
-                        x + Constants.NODE_SIZE < this.gameState.size &&
-                        y - Constants.NODE_SIZE > 0 &&
-                        y + Constants.NODE_SIZE < this.gameState.size;
+        const inTownArea = x - Constants.NODE_SIZE > 0 &&
+            x + Constants.NODE_SIZE < this.gameState.size &&
+            y - Constants.NODE_SIZE > 0 &&
+            y + Constants.NODE_SIZE < this.gameState.size;
         return !onTopOfNode && inSpawningRange && inTownArea;
     }
 

@@ -46,7 +46,7 @@ export class Screen {
         // Town background
         this.ctx.fillStyle = '#ffffff';
         this.ctx.fillRect(0, 0, this.size, this.size);
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; // Semi-transparent color for grid
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
         this.ctx.font = '14px Arial';
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
@@ -59,7 +59,7 @@ export class Screen {
 
         // Draw node roads? (connections)
 
-        // Draw nodes
+        // Visible nodes
         this.game.gameState.nodes.forEach(node => {
             if (this.isVisible(node)) {
                 node.render(this.ctx);
@@ -68,13 +68,12 @@ export class Screen {
 
         // Draw other stuff like gained coins
 
-        // Draw node placing
+        // New node placing
         if(this.placingNode) {
             const color = this.placingNode === 'resident' ? Constants.COLOR_RESIDENT :
                 this.placingNode === 'commercial' ? Constants.COLOR_COMMERCIAL : Constants.COLOR_FACTORY;
             const mouseX = (this.mouse.x - this.offset.x) / this.zoomLevel;
             const mouseY = (this.mouse.y - this.offset.y) / this.zoomLevel;
-            // console.log('render placing:',mouseX, mouseY);
             this.ctx.fillStyle = color;
             this.ctx.beginPath();
             this.ctx.arc(mouseX, mouseY, Constants.NODE_SIZE, 0, 2 * Math.PI);
@@ -121,9 +120,12 @@ export class Screen {
 
     spawnNode(nodeType, event) {
         this.placingNode = null;
+        this.mouse.x = -1;
+        this.mouse.y = -1;
         const x = (event.clientX - this.offset.x ) / this.zoomLevel;
         const y = (event.clientY - this.offset.y ) / this.zoomLevel;
         this.game.spawnNode(nodeType, x, y);
+        this.render();
     }
 
     // ### ### ### ### ### Event Listeners ### ### ### ### ###

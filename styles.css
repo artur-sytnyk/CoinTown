@@ -1,4 +1,5 @@
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -22,7 +23,7 @@ body, html {
 #canvas {
     position: absolute;
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
-                      linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
     background-size: 1rem 1rem;
     background-color: #70e69d;
 }
@@ -74,10 +75,10 @@ button:hover {
 }
 
 .menu-content button {
-   font-size: 1rem;
-   margin-top: 10px;
-   min-width: fit-content;
-   padding: 0.5rem;
+    font-size: 1rem;
+    margin-top: 10px;
+    min-width: fit-content;
+    padding: 0.5rem;
 }
 
 .coins-display {
@@ -107,26 +108,31 @@ button:hover {
 .green {
     background-color: #5adc5a;
 }
+
 .green:hover {
     background-color: #5adc5a;
     color: white;
 }
+
 .blue {
     background-color: #5a5adc;
 }
+
 .blue:hover {
     background-color: #5a5adc;
     color: white;
 }
+
 .orange {
     background-color: #dc8c3c;
 }
+
 .orange:hover {
     background-color: #dc8c3c;
     color: white;
 }
 
-.btn-disabled{
+.btn-disabled {
     pointer-events: none;
     opacity: 0.5;
 }
@@ -137,19 +143,46 @@ button:hover {
     right: 10px;
 }
 
-.alert {
-    display: none;
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 1rem;
-    border: 2px solid #f5c6cb;
-    border-radius: 5px;
-    font-size: 1.3rem;
+/* ### ### ### Alerts ### ### ### */
+
+#alert-wrapper {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: fit-content;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.alert.show {
-    display: block;
+.alert {
+    padding: 1rem;
+    border: 2px solid;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1.3rem;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.alert.info {
+    color: blue;
+    border-color: blue;
+    background-color: rgb(240, 240, 255);
+}
+
+.alert.success {
+    color: green;
+    border-color: green;
+    background-color: rgb(240, 255, 240);
+}
+
+.alert.error {
+    color: red;
+    border-color: red;
+    background-color: rgb(255, 240, 240);
+}
+
+.fade-out {
+    opacity: 0;
 }
