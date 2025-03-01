@@ -3,6 +3,7 @@ import { Constants } from './Constants.js';
 import { Game } from './Game.js';
 import { Screen } from './Screen.js';
 import { Alert } from './Alert.js';
+import './utils.js'; // prototyped capitalization
 
 class App {
     constructor() {

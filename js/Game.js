@@ -1,7 +1,6 @@
 import { Constants } from "./Constants.js";
 import { GameState } from "./GameState.js";
 import { Resident, Commercial, Factory } from "./GameNode.js";
-import { capitalize } from './utils.js';
 
 export class Game {
     constructor(size) {
@@ -54,9 +53,8 @@ export class Game {
         // game logic update - node gains and checks
     }
 
+    //  ### ### ### ### ### Additional Functions ### ### ### ### ###
 
-
-    // Additional Functions
     setTownSize(size) {
         this.gameState.size = size;
     }
@@ -64,7 +62,7 @@ export class Game {
     spawnNode(nodeType, x, y) {
         if (this.isAbleToSpawn(x, y)) {
             this.createNode(nodeType, x, y);
-            alert.success(capitalize(nodeType) + ' built');
+            alert.success(nodeType.capitalize() + ' built');
         } else {
             alert.error('Cannot build there');
         }
@@ -100,7 +98,7 @@ export class Game {
                 this.gameState.spawnNode(new Factory(x, y));
                 break;
             default:
-                console.error('Unknown node type');
+                alert.error('Unknown node type');
         }
     }
 }

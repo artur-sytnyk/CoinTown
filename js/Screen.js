@@ -15,8 +15,22 @@ export class Screen {
         this.placingNode = null;
         this.mouse = { x: 0, y: 0 };
 
+        this.icons = {
+            disgust: new Image(),
+            work: new Image(),
+            product: new Image(),
+            shop: new Image()
+        }
+        this.initIcons();
         this.initCanvas();
         this.setupEventListeners();
+    }
+
+    initIcons() {
+        this.icons.disgust.src = "../assets/img/icon-disgust.png";
+        this.icons.work.src = "../assets/img/icon-work.png";
+        this.icons.product.src = "../assets/img/icon-product.png";
+        this.icons.shop.src = "../assets/img/icon-shop.png";
     }
 
     initCanvas() {
@@ -59,7 +73,7 @@ export class Screen {
 
         // Roads
         this.game.gameState.connections.forEach(con => {
-            if(this.isVisible(con.nodeA) && this.isVisible(con.nodeB)) {
+            if (this.isVisible(con.nodeA) && this.isVisible(con.nodeB)) {
                 con.render(this.ctx);
             }
         });
@@ -68,22 +82,111 @@ export class Screen {
         this.game.gameState.nodes.forEach(node => {
             if (this.isVisible(node)) {
                 node.render(this.ctx);
-            } else { console.log('Node not visible') }
+            }
         });
 
         // Draw other stuff like gained coins
 
         // New node placing
-        if(this.placingNode) {
-            const color = this.placingNode === 'resident' ? Constants.COLOR_RESIDENT :
-                this.placingNode === 'commercial' ? Constants.COLOR_COMMERCIAL : Constants.COLOR_FACTORY;
+        if (this.placingNode) {
             const mouseX = (this.mouse.x - this.offset.x) / this.zoomLevel;
             const mouseY = (this.mouse.y - this.offset.y) / this.zoomLevel;
+
+            // Placing area
+            this.ctx.fillStyle = '#ffe34530';
+            this.ctx.beginPath();
+            this.ctx.arc(mouseX, mouseY, Constants.NODE_RANGE, 0, 2 * Math.PI);
+            this.ctx.fill();
+            this.ctx.strokeStyle = '#ffe34599';
+            this.ctx.stroke();
+
+            // Per type ranges
+            this.renderPlacementRanges(this.placingNode, mouseX, mouseY);
+
+            // New node itself
+            let color = this.getNodeColor(this.placingNode);
             this.ctx.fillStyle = color;
             this.ctx.beginPath();
             this.ctx.arc(mouseX, mouseY, Constants.NODE_SIZE, 0, 2 * Math.PI);
             this.ctx.fill();
         }
+    }
+
+    renderPlacementRanges(nodeType, mouseX, mouseY) {
+        const ranges = this.getNodeRanges(nodeType);
+        ranges.forEach(range => {
+            this.ctx.beginPath();
+            this.ctx.arc(mouseX, mouseY, range.size, 0, 2 * Math.PI);
+            this.ctx.strokeStyle = range.color;
+            this.ctx.stroke();
+
+            const iconY = mouseY + range.size + 10;
+            this.ctx.drawImage(range.icon, mouseX - 10, iconY - 10, 20, 20);
+        });
+    }
+
+    getNodeRanges(nodeType) {
+        const ranges = [];// work, shop, disgust/sad | product
+        switch (nodeType) {
+            case 'resident':
+                ranges.push(
+                    {
+                        size: Constants.RESIDENT_COMMUTE_RANGE,
+                        color: Constants.COLOR_RESIDENT, 
+                        icon: this.icons.work
+                    },
+                    {
+                        size: Constants.SHOPPING_RANGE,
+                        color: Constants.COLOR_COMMERCIAL, 
+                        icon: this.icons.shop
+                    },
+                    {
+                        size: Constants.FACTORY_DISGUST_RANGE,
+                        color: Constants.COLOR_FACTORY, 
+                        icon: this.icons.disgust
+                    }
+                );
+                break;
+            case 'commercial':
+                ranges.push(
+                    {
+                        size: Constants.RESIDENT_COMMUTE_RANGE,
+                        color: Constants.COLOR_RESIDENT, 
+                        icon: this.icons.work
+                    },
+                    {
+                        size: Constants.SHOPPING_RANGE,
+                        color: Constants.COLOR_RESIDENT, 
+                        icon: this.icons.shop
+                    },
+                    {
+                        size: Constants.FACTORY_DELIVERY_RANGE,
+                        color: Constants.COLOR_FACTORY, 
+                        icon: this.icons.product
+                    }
+                );
+                break;
+            case 'factory':
+                ranges.push(
+                    {
+                        size: Constants.RESIDENT_COMMUTE_RANGE,
+                        color: Constants.COLOR_RESIDENT, 
+                        icon: this.icons.work
+                    },
+                    {
+                        size: Constants.FACTORY_DELIVERY_RANGE,
+                        color: Constants.COLOR_COMMERCIAL, 
+                        icon: this.icons.product
+                    },
+                    {
+                        size: Constants.FACTORY_DISGUST_RANGE,
+                        color: Constants.COLOR_RESIDENT, 
+                        icon: this.icons.disgust
+                    }
+                );
+                break;
+        }
+        return ranges;
     }
 
     // ### ### ### ### ### Additional Functions ### ### ### ### ###
@@ -97,6 +200,19 @@ export class Screen {
 
         return (node.x + nodeSize > left && node.x - nodeSize < right &&
             node.y + nodeSize > top && node.y - nodeSize < bottom);
+    }
+
+    getNodeColor(nodeType) {
+        switch (nodeType) {
+            case 'resident':
+                return Constants.COLOR_RESIDENT;
+            case 'commercial':
+                return Constants.COLOR_COMMERCIAL;
+            case 'factory':
+                return Constants.COLOR_FACTORY;
+            default:
+                return 'transparent';
+        }
     }
 
     zoom(delta, x, y) {
@@ -126,10 +242,10 @@ export class Screen {
 
     spawnNode(nodeType, event) {
         this.placingNode = null;
-        this.mouse.x = -1;
-        this.mouse.y = -1;
-        const x = (event.clientX - this.offset.x ) / this.zoomLevel;
-        const y = (event.clientY - this.offset.y ) / this.zoomLevel;
+        this.mouse.x = -100;
+        this.mouse.y = -100;
+        const x = (event.clientX - this.offset.x) / this.zoomLevel;
+        const y = (event.clientY - this.offset.y) / this.zoomLevel;
         this.game.spawnNode(nodeType, x, y);
         this.render();
     }
