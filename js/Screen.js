@@ -13,7 +13,7 @@ export class Screen {
 
         this.isDragging = false;
         this.placingNode = null;
-        this.mouse = { x: 0, y: 0 };
+        this.mouse = { x: -1000, y: -1000 };
 
         this.icons = {
             disgust: new Image(),
@@ -113,36 +113,35 @@ export class Screen {
     }
 
     renderPlacementRanges(nodeType, mouseX, mouseY) {
-        const ranges = this.getNodeRanges(nodeType);
-        ranges.forEach(range => {
+        this.getNodeInteractionRanges(nodeType).forEach(range => {
             this.ctx.beginPath();
-            this.ctx.arc(mouseX, mouseY, range.size, 0, 2 * Math.PI);
+            this.ctx.arc(mouseX, mouseY, range.distance, 0, 2 * Math.PI);
             this.ctx.strokeStyle = range.color;
             this.ctx.stroke();
 
-            const iconY = mouseY + range.size + 10;
-            this.ctx.drawImage(range.icon, mouseX - 10, iconY - 10, 20, 20);
+            const iconY = mouseY + range.distance + 2;
+            this.ctx.drawImage(range.icon, mouseX - 10, iconY, 20, 20);
         });
     }
 
-    getNodeRanges(nodeType) {
-        const ranges = [];// work, shop, disgust/sad | product
+    getNodeInteractionRanges(nodeType) {
+        const ranges = [];
         switch (nodeType) {
             case 'resident':
                 ranges.push(
                     {
-                        size: Constants.RESIDENT_COMMUTE_RANGE,
-                        color: Constants.COLOR_RESIDENT, 
+                        distance: Constants.RESIDENT_COMMUTE_RANGE,
+                        color: Constants.COLOR_RESIDENT,
                         icon: this.icons.work
                     },
                     {
-                        size: Constants.SHOPPING_RANGE,
-                        color: Constants.COLOR_COMMERCIAL, 
+                        distance: Constants.SHOPPING_RANGE,
+                        color: Constants.COLOR_COMMERCIAL,
                         icon: this.icons.shop
                     },
                     {
-                        size: Constants.FACTORY_DISGUST_RANGE,
-                        color: Constants.COLOR_FACTORY, 
+                        distance: Constants.FACTORY_DISGUST_RANGE,
+                        color: Constants.COLOR_FACTORY,
                         icon: this.icons.disgust
                     }
                 );
@@ -150,18 +149,18 @@ export class Screen {
             case 'commercial':
                 ranges.push(
                     {
-                        size: Constants.RESIDENT_COMMUTE_RANGE,
-                        color: Constants.COLOR_RESIDENT, 
+                        distance: Constants.RESIDENT_COMMUTE_RANGE,
+                        color: Constants.COLOR_RESIDENT,
                         icon: this.icons.work
                     },
                     {
-                        size: Constants.SHOPPING_RANGE,
-                        color: Constants.COLOR_RESIDENT, 
+                        distance: Constants.SHOPPING_RANGE,
+                        color: Constants.COLOR_RESIDENT,
                         icon: this.icons.shop
                     },
                     {
-                        size: Constants.FACTORY_DELIVERY_RANGE,
-                        color: Constants.COLOR_FACTORY, 
+                        distance: Constants.FACTORY_DELIVERY_RANGE,
+                        color: Constants.COLOR_FACTORY,
                         icon: this.icons.product
                     }
                 );
@@ -169,18 +168,18 @@ export class Screen {
             case 'factory':
                 ranges.push(
                     {
-                        size: Constants.RESIDENT_COMMUTE_RANGE,
-                        color: Constants.COLOR_RESIDENT, 
+                        distance: Constants.RESIDENT_COMMUTE_RANGE,
+                        color: Constants.COLOR_RESIDENT,
                         icon: this.icons.work
                     },
                     {
-                        size: Constants.FACTORY_DELIVERY_RANGE,
-                        color: Constants.COLOR_COMMERCIAL, 
+                        distance: Constants.FACTORY_DELIVERY_RANGE,
+                        color: Constants.COLOR_COMMERCIAL,
                         icon: this.icons.product
                     },
                     {
-                        size: Constants.FACTORY_DISGUST_RANGE,
-                        color: Constants.COLOR_RESIDENT, 
+                        distance: Constants.FACTORY_DISGUST_RANGE,
+                        color: Constants.COLOR_RESIDENT,
                         icon: this.icons.disgust
                     }
                 );
@@ -188,6 +187,7 @@ export class Screen {
         }
         return ranges;
     }
+
 
     // ### ### ### ### ### Additional Functions ### ### ### ### ###
 
@@ -242,8 +242,8 @@ export class Screen {
 
     spawnNode(nodeType, event) {
         this.placingNode = null;
-        this.mouse.x = -100;
-        this.mouse.y = -100;
+        this.mouse.x = -1000;
+        this.mouse.y = -1000;
         const x = (event.clientX - this.offset.x) / this.zoomLevel;
         const y = (event.clientY - this.offset.y) / this.zoomLevel;
         this.game.spawnNode(nodeType, x, y);

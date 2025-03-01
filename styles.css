@@ -186,3 +186,16 @@ button:hover {
 .fade-out {
     opacity: 0;
 }
+
+
+/* ### ### ### Icons ### ### ### */
+
+/* .range-icon {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    top: -100px;
+    left: -100px;
+} */
