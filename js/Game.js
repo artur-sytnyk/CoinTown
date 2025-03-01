@@ -21,12 +21,16 @@ export class Game {
     }
 
     start() {
+        if(this.isRunning) return;
         this.isRunning = true;
+        this.lastTimestamp = performance.now();
+        this.lastUpdateDeltaTime = 0;
         requestAnimationFrame(this.gameLoop.bind(this));
     }
 
     stop() {
         this.isRunning = false;
+        this.lastUpdateDeltaTime = 0;
     }
 
     gameLoop(timestamp) {
@@ -34,23 +38,28 @@ export class Game {
         const speedAffectedInterval = this.updateInterval / this.speedMultiplier;
 
         // Accumulate update delta time
+
         this.lastUpdateDeltaTime += (timestamp - this.lastTimestamp) / 1000;
         this.lastTimestamp = timestamp;
 
         // Update if interval reached.
         if (this.lastUpdateDeltaTime >= speedAffectedInterval / 1000) {
-            this.update();
+            this.update(); 
             if (this.screen) this.screen.render();
             this.lastUpdateDeltaTime -= speedAffectedInterval / 1000;
         }
-
-
         requestAnimationFrame(this.gameLoop.bind(this));
     }
 
     update() {
         this.updateCounter++;
-        // game logic update - node gains and checks
+
+        this.gameState.nodes.forEach(node => {
+            node.update(this.updateCounter, this.gameState);
+        });
+        this.gameState.onCoinsChange();
+
+        if(this.updateCounter === 24) this.updateCounter = 0;
     }
 
     //  ### ### ### ### ### Additional Functions ### ### ### ### ###

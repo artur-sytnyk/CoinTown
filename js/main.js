@@ -46,6 +46,9 @@ class App {
         document.getElementById('gameStateToggle').addEventListener('click', this.gameStateToggle.bind(this));
         document.getElementById('simulationSpeedBtn').addEventListener('click', this.speedToggle.bind(this));
         document.getElementById('restartBtn').addEventListener('click', this.restartGame.bind(this));
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Space') document.getElementById('gameStateToggle').click();
+        });
         this.setupBuyButtons();
     }
 

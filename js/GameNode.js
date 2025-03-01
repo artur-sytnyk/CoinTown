@@ -1,7 +1,7 @@
 import { Constants } from './Constants.js';
 import { removeItem } from './utils.js';
 
-// Buildings
+// Nodes are "Buildings"
 export default class Node {
     constructor(x, y) {
         this.x = x;
@@ -31,6 +31,8 @@ export default class Node {
     isConnectable() {
         return this.connections.length < Constants.CONNECTIONS_LIMIT;
     }
+
+    update() {}
 }
 
 export class CentralNode extends Node {
@@ -42,6 +44,10 @@ export class CentralNode extends Node {
         ctx.strokeStyle = '#000000';
         ctx.lineWidth = 2;
         ctx.stroke();
+    }
+
+    update(updateCounter, gameState) {
+        if(updateCounter % 4 === 0) gameState.addCoins(1);
     }
 }
 

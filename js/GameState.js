@@ -18,7 +18,7 @@ export class GameState {
         console.info('GameState created');
     }
 
-    // GameState / savegame functions
+    // ### ### ### GameState / savegame functions ### ### ###
     restart() {
         this.coins = Constants.STARTING_COINS;
         this.nodeCosts = {
@@ -43,7 +43,7 @@ export class GameState {
         this.onCoinsChange();
     }
 
-    // Node functions
+    // ### ### ### ### ### Node functions ### ### ### ### ###
     addNode(node) {
         this.nodes.push(node);
     }
@@ -105,7 +105,8 @@ export class GameState {
         this.connections = removeItem(this.connections, con);
     }
 
-    // Game logic
+    // ### ### ### ### ### Game logic ### ### ### ### ###
+
     addCoins(amount) {
         this.coins += amount;
     }
@@ -122,7 +123,9 @@ export class GameState {
         return this.coins >= this.nodeCosts.factory;
     }
 
-    // Additional functions
+    // ### ### ### ### ### Additional functions ### ### ### ### ###
+
+    // Additionally called each game.update()
     onCoinsChange() {
         document.getElementById('coins').innerText = this.coins;
         if (!this.canAffordResident()) document.getElementById('buyResidentBtn').classList.add("btn-disabled");

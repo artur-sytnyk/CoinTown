@@ -188,7 +188,22 @@ export class Screen {
         return ranges;
     }
 
+    // ### ### ### ### ### Screen <=> Town position coords. ### ### ### ### ###
 
+    screenToTown(screenX, screenY) {
+        return {
+            x: (screenX - this.offset.x) / this.zoomLevel,
+            y: (screenY - this.offset.y) / this.zoomLevel
+        };
+    }
+    
+    townToScreen(townX, townY) {
+        return {
+            x: (townX * this.zoomLevel) + this.offset.x,
+            y: (townY * this.zoomLevel) + this.offset.y
+        };
+    }
+    
     // ### ### ### ### ### Additional Functions ### ### ### ### ###
 
     isVisible(node) {
