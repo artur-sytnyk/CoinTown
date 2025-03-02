@@ -44,12 +44,14 @@ export class GameState {
     }
 
     // ### ### ### ### ### Node functions ### ### ### ### ###
+
     addNode(node) {
         this.nodes.push(node);
     }
 
     removeNode(node) {
-        this.nodes = this.nodes.filter(n => n !== node);
+        node.connections.forEach(con => this.removeConnection(con));
+        this.nodes = removeItem(this.nodes, node);
     }
 
     spawnNode(node) {
@@ -100,7 +102,7 @@ export class GameState {
         this.connections.push(newCon);
     }
 
-    deleteConnection(con) {
+    removeConnection(con) {
         con.destroy();
         this.connections = removeItem(this.connections, con);
     }
@@ -123,6 +125,63 @@ export class GameState {
         return this.coins >= this.nodeCosts.factory;
     }
 
+    findWorkplaceForResident(residentNode) {
+        const workplace = this.nodes.find(node =>
+            (node instanceof Commercial || node instanceof Factory) && !node.isFullyStaffed()
+        );
+        if (workplace) {
+            residentNode.workplace = workplace;
+            workplace.addWorker(residentNode);
+        }
+    }
+
+    isNearFactory(residentNode) {
+        return this.nodes.some(node => {
+            return node instanceof Factory &&
+                nodeDistance(residentNode, node) <= Constants.FACTORY_DISGUST_RANGE;
+        });
+    }
+
+    createShoppingRoute(residentNode) {
+        const shoppingRoute = [];
+        let availableShops = this.nodes.filter(
+            shop => shop instanceof Commercial && shop.hasProduct()
+        );
+        if (!availableShops.length) return shoppingRoute;
+
+        // Find first commercial to shop
+        let firstShop = availableShops.find(
+            shop => nodeDistance(residentNode, shop) <= Constants.SHOPPING_RANGE
+        );
+        if (!firstShop) return shoppingRoute;
+        shoppingRoute.push(firstShop);
+        availableShops = removeItem(availableShops, firstShop);
+
+        // Commercials to continue shopping
+        let lastShop = firstShop;
+        for (let i = 0; i < 7; i++) {
+            const nextShop = availableShops.find(
+                shop => nodeDistance(lastShop, shop) <= Constants.SHOPPING_CHAIN_RANGE
+            );
+            if (!nextShop) break;
+            shoppingRoute.push(nextShop);
+            availableShops = removeItem(availableShops, nextShop);
+            lastShop = nextShop;
+        }
+
+        return shoppingRoute;
+    }
+
+    findCommercialsForFactory(factoryNode) {
+        return this.nodes
+            .filter(node =>
+                node instanceof Commercial &&
+                node.canBuyProduct() &&
+                nodeDistance(factoryNode, node) <= Constants.FACTORY_DELIVERY_RANGE
+            )
+            .sort((a, b) => nodeDistance(factoryNode, a) - nodeDistance(factoryNode, b));
+    }
+
     // ### ### ### ### ### Additional functions ### ### ### ### ###
 
     // Additionally called each game.update()
@@ -140,5 +199,10 @@ export class GameState {
         document.getElementById('rCost').innerText = this.nodeCosts.resident;
         document.getElementById('cCost').innerText = this.nodeCosts.commercial;
         document.getElementById('fCost').innerText = this.nodeCosts.factory;
+    }
+
+    isWithinRange(nodeA, nodeB, range) {
+        const distance = nodeDistance(nodeA, nodeB);
+        return distance <= range;
     }
 }

@@ -1,3 +1,5 @@
+import { removeItem } from "./utils.js";
+
 export class Alert {
     constructor() {
         this.wrapper = document.getElementById('alert-wrapper');
@@ -20,13 +22,13 @@ export class Alert {
 
     showMessage(text, type) {
         if (this.messages.length >= this.maxMessages) {
-            this.removeOldestMessage();
+            this.removeMessage(this.messages[0]);
         }
 
         const alertDiv = document.createElement('div');
         alertDiv.classList.add('alert', type);
         alertDiv.innerText = text;
-        
+
         this.wrapper.appendChild(alertDiv);
         this.messages.push(alertDiv);
 
@@ -39,13 +41,7 @@ export class Alert {
         alertDiv.classList.add('fade-out');
         setTimeout(() => {
             this.wrapper.removeChild(alertDiv);
-            this.messages = this.messages.filter(msg => msg !== alertDiv);
-        }, 500);
-    }
-
-    removeOldestMessage() {
-        if (this.messages.length > 0) {
-            this.removeMessage(this.messages[0]);
-        }
+            this.messages = removeItem(this.messages, alertDiv);
+        }, 300);
     }
 }

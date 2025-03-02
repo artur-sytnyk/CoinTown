@@ -10,3 +10,7 @@ String.prototype.capitalize = function() {
 export const removeItem = (arr, item) => arr.filter(i => i !== item);
 
 export const nodeDistance = (nodeA, nodeB) => Math.hypot(nodeA.x - nodeB.x, nodeA.y - nodeB.y);
+
+export const getRandomInt = (max) => Math.floor(Math.random() * max);
+
+
