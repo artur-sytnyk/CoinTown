@@ -15,11 +15,13 @@ export class Screen {
         this.placingNode = null;
         this.mouse = { x: -1000, y: -1000 };
 
+        this.animations = [];
         this.icons = {
             disgust: new Image(),
             work: new Image(),
             product: new Image(),
-            shop: new Image()
+            shop: new Image(),
+            coin: new Image()
         }
         this.initIcons();
         this.initCanvas();
@@ -31,6 +33,7 @@ export class Screen {
         this.icons.work.src = "../assets/img/icon-work.png";
         this.icons.product.src = "../assets/img/icon-product.png";
         this.icons.shop.src = "../assets/img/icon-shop.png";
+        this.icons.coin.src = "../assets/img/coin.png";
     }
 
     initCanvas() {
@@ -110,6 +113,32 @@ export class Screen {
             this.ctx.arc(mouseX, mouseY, Constants.NODE_SIZE, 0, 2 * Math.PI);
             this.ctx.fill();
         }
+
+        // Node animations
+        const now = performance.now();
+        this.animations = this.animations.filter(anim => now - anim.startTime < 1000);
+        this.animations.forEach(anim => {
+            if (!this.isVisible(anim.node)) return;
+
+            const progress = (now - anim.startTime) / 1000;
+            const alpha = 1 - progress;
+            const offsetY = -progress * 20 - Constants.NODE_SIZE * 2;
+            const sign = anim.amount > 0 ? "+" : "-";
+            const amountText = `${sign}${Math.abs(anim.amount)}`;
+
+            this.ctx.globalAlpha = alpha;
+            this.ctx.fillStyle = "#505050";
+            this.ctx.font = "20px Arial";
+            const textWidth = this.ctx.measureText(amountText).width;
+            const centerX = anim.node.x - textWidth / 2;
+            this.ctx.fillText(amountText, centerX, anim.node.y + offsetY);
+            if (anim.image) {
+                this.ctx.drawImage(anim.image, anim.node.x, anim.node.y + offsetY - 8, 16, 16);
+            }
+
+            this.ctx.globalAlpha = 1;
+        });
+
     }
 
     renderPlacementRanges(nodeType, mouseX, mouseY) {
@@ -188,6 +217,20 @@ export class Screen {
         return ranges;
     }
 
+    addNodeAnimation(node, type, amount) {
+        const animImage = {
+            wealthGain: this.icons.coin,
+            productGain: this.icons.product
+        }[type];
+        this.animations.push({
+            node: node,
+            amount: amount,
+            startTime: performance.now(),
+            image: animImage
+        });
+    }
+
+
     // ### ### ### ### ### Screen <=> Town position coords. ### ### ### ### ###
 
     screenToTown(screenX, screenY) {
@@ -196,14 +239,14 @@ export class Screen {
             y: (screenY - this.offset.y) / this.zoomLevel
         };
     }
-    
+
     townToScreen(townX, townY) {
         return {
             x: (townX * this.zoomLevel) + this.offset.x,
             y: (townY * this.zoomLevel) + this.offset.y
         };
     }
-    
+
     // ### ### ### ### ### Additional Functions ### ### ### ### ###
 
     isVisible(node) {
@@ -261,7 +304,7 @@ export class Screen {
         this.mouse.y = -1000;
         const x = (event.clientX - this.offset.x) / this.zoomLevel;
         const y = (event.clientY - this.offset.y) / this.zoomLevel;
-        this.game.spawnNode(nodeType, x, y);
+        this.game.spawnNode(nodeType, x, y, this.addNodeAnimation.bind(this));
         this.render();
     }
 

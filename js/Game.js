@@ -68,9 +68,9 @@ export class Game {
         this.gameState.size = size;
     }
 
-    spawnNode(nodeType, x, y) {
+    spawnNode(nodeType, x, y, nodeAnimationFunc) {
         if (this.isAbleToSpawn(x, y)) {
-            this.createNode(nodeType, x, y);
+            this.createNode(nodeType, x, y, nodeAnimationFunc);
             alert.success(nodeType.capitalize() + ' built');
         } else {
             alert.error('Cannot build there');
@@ -95,16 +95,16 @@ export class Game {
         return !onTopOfNode && inSpawningRange && inTownArea;
     }
 
-    createNode(nodeType, x, y) {
+    createNode(nodeType, x, y, nodeAnimationFunc) {
         switch (nodeType) {
             case 'resident':
-                this.gameState.spawnNode(new Resident(x, y));
+                this.gameState.spawnNode(new Resident(x, y, nodeAnimationFunc));
                 break;
             case 'commercial':
-                this.gameState.spawnNode(new Commercial(x, y));
+                this.gameState.spawnNode(new Commercial(x, y, nodeAnimationFunc));
                 break;
             case 'factory':
-                this.gameState.spawnNode(new Factory(x, y));
+                this.gameState.spawnNode(new Factory(x, y, nodeAnimationFunc));
                 break;
             default:
                 alert.error('Unknown node type');

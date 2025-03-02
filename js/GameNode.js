@@ -1,13 +1,14 @@
 import { Constants } from './Constants.js';
 import { getRandomInt, removeItem } from './utils.js';
 
+
 // Nodes are "Buildings"
 export default class Node {
-    constructor(x, y) {
+    constructor(x, y, nodeAnimationFunc = null) {
         this.x = x;
         this.y = y;
         this.connections = [];
-        console.log('Node created at', x, y);
+        this.nodeAnimationFunc = nodeAnimationFunc;
     }
 
     render(ctx, color = 'black') {
@@ -35,6 +36,8 @@ export default class Node {
     update() { }
 }
 
+
+
 // "Administration"
 export class CentralNode extends Node {
     render(ctx) {
@@ -48,17 +51,23 @@ export class CentralNode extends Node {
     }
 
     update(updateCounter, gameState) {
-        if (updateCounter % 4 === 0) gameState.addCoins(1);
+        if (Constants.CENTRAL_NODE_GAIN_COINS && 
+            updateCounter % Constants.CENTRAL_NODE_GAIN_DELAY === 0
+        ) gameState.addCoins(1);
     }
 }
 
+
+
 // Residents
 export class Resident extends Node {
-    constructor(x, y, wealth = 0) {
-        super(x, y);
+    constructor(x, y, nodeAnimationFunc = null, wealth = 0) {
+        super(x, y, nodeAnimationFunc);
         this.workplace = null;
         this.wealth = wealth;
         this.happiness = 50;
+        this.happinessChange = 0;
+        this.workedToday = false;
         this.isShopping = false;
         this.shoppedToday = 0;
         this.shoppingRoute = [];
@@ -70,8 +79,11 @@ export class Resident extends Node {
 
     update(updateCounter, gameState) {
         if (!this.workplace) gameState.findWorkplaceForResident(this);
-        else if (updateCounter <= 8) this.workplace.work();
-        else if (updateCounter <= 16) {
+        else if (updateCounter <= 8) {
+            this.workplace.work();
+            this.workedToday = true;
+        }
+        else if (updateCounter <= 16 && this.wealth > 0) {
             if (this.isShopping) {
                 this.continueShopping();
             } else {
@@ -80,9 +92,13 @@ export class Resident extends Node {
         }
 
         if (updateCounter === 24) {
-            let happinessChange = (this.shoppedToday > 0) ? 10 + 5 * (this.shoppedToday - 1) : -10;
-            if (gameState.isNearFactory(this)) happinessChange -= 15;
-            this.happiness = Math.min(this.happiness + happinessChange, Constants.HAPPINESS_LIMIT);
+            this.happinessChange += (this.shoppedToday > 0) ? 5 * (this.shoppedToday - 1) : -5;
+            if (gameState.isNearFactory(this)) this.happinessChange -= 10;
+            if (this.workedToday) this.happinessChange += 5;
+
+            this.happiness = Math.min(this.happiness + this.happinessChange, Constants.HAPPINESS_LIMIT);
+            this.happinessChange = 0;
+            this.workedToday = false;
         }
         if (this.happiness <= 0) this.destroy(gameState);
     }
@@ -94,24 +110,26 @@ export class Resident extends Node {
     }
 
     leaveWorkplace() {
-        this.workplace.removeWorker(this);
+        if(this.workplace) this.workplace.removeWorker(this);
         this.workplace = null;
     }
 
     addWealth(amount) {
         this.wealth += amount;
+        if(this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'wealthGain', amount);
     }
 
     startShopping(gameState) {
         this.isShopping = true;
         if (this.wealth <= 0) return;
         this.shoppingRoute = gameState.createShoppingRoute(this);
+        if (!this.shoppingRoute.length) return;
         this.visitShop();
     }
 
     continueShopping() {
         this.shoppingRoute = this.shoppingRoute.filter(shop => shop.hasProduct());
-        if (this.shoppingRoute.length <= 0) return;
+        if (!this.shoppingRoute.length) return;
         this.visitShop();
         if (this.shoppingRoute.length === 1 && getRandomInt(3) > 0) {
             this.shoppingRoute.shift();
@@ -122,13 +140,16 @@ export class Resident extends Node {
         this.shoppingRoute[0].shop();
         this.wealth--;
         this.shoppedToday++;
+        if(this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'wealthGain', 1);
     }
 }
 
+
+
 // Workplaces
 export class Commercial extends Node {
-    constructor(x, y, wealth = 0, productCount = 0, productLimit = 100, workerLimit = 1) {
-        super(x, y);
+    constructor(x, y, nodeAnimationFunc = null, wealth = 2, productCount = 0, productLimit = 100, workerLimit = 1) {
+        super(x, y, nodeAnimationFunc);
         this.wealth = wealth;
         this.wealthToday = 0;
         this.productCount = productCount;
@@ -150,10 +171,11 @@ export class Commercial extends Node {
 
             // Worked today
             this.happinessChange += (this.workplace.workedToday) ? 10 : -10;
+            this.wealth += (this.workplace.workedToday) ? 1 : 0;
             this.workplace.workedToday = false;
 
             // Hapiness calc
-            this.happiness += this.happinessChange;
+            this.happiness = Math.min(this.happiness + this.happinessChange, Constants.HAPPINESS_LIMIT);
             this.happinessChange = 0;
         }
 
@@ -178,7 +200,7 @@ export class Commercial extends Node {
     }
 
     canBuyProduct() {
-        return (this.productLimit > this.productCount) && this.wealth > 0;
+        return this.productLimit > this.productCount && this.wealth > 0;
     }
 
     buyProducts(availableAmount) {
@@ -186,6 +208,7 @@ export class Commercial extends Node {
         let orderCount = Math.min(this.wealth, availableAmount, productSpaceLeft);
         this.wealth -= orderCount;
         this.productCount += orderCount;
+        if(this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'productGain', orderCount);
         return orderCount;
     }
 
@@ -212,8 +235,9 @@ export class Commercial extends Node {
         // Taxes
         gameState.addCoins(portion);
         // Own growth
+        portion += this.wealthToday - (portion * 3);
         this.wealth += portion;
-        this.wealth += this.wealthToday - (portion * 3);
+        if(this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'wealthGain', portion);
     }
 
     // Workplace methods
@@ -234,9 +258,11 @@ export class Commercial extends Node {
     }
 }
 
+
+
 export class Factory extends Node {
-    constructor(x, y, wealth = 0, productCount = 0, productLimit = 100, workerLimit = 1) {
-        super(x, y);
+    constructor(x, y, nodeAnimationFunc = null, wealth = 2, productCount = 0, productLimit = 100, workerLimit = 1) {
+        super(x, y, nodeAnimationFunc);
         this.wealth = wealth;
         this.productCount = productCount;
         this.productLimit = productLimit;
@@ -255,10 +281,12 @@ export class Factory extends Node {
     update(updateCounter, gameState) {
         // Start of day - distribute product
         if (this.productCount > 0) this.distributeProduct(gameState);
+
         // Worker shift end, + product, - wages
         if (updateCounter === 8) {
             let totalWorkers = this.workplace.workers.length;
             this.addProduct(totalWorkers * this.productMultiplier);
+            if(this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'productGain', this.productMultiplier);
             if (this.wealth >= totalWorkers * this.productMultiplier) {
                 this.happinessChange += 5;
                 this.workplace.workers.forEach(worker => {
@@ -269,22 +297,25 @@ export class Factory extends Node {
                 this.happinessChange -= 10;
             }
         }
+
         // Day end
         if (updateCounter === 24) {
             // Worked and/or sold today
             this.happinessChange += (this.workplace.workedToday) ? 10 : -10;
-            this.happinessChange += (this.distributedToday) ? + 10 : -10;
+            this.wealth += (this.workplace.workedToday) ? 1 : 0;
             this.workplace.workedToday = false;
+            this.happinessChange += (this.distributedToday) ? + 10 : -10;
             this.distributedToday = false;
+
             // Hapiness calc
-            this.happiness += this.happinessChange;
+            this.happiness = Math.min(this.happiness + this.happinessChange, Constants.HAPPINESS_LIMIT);
             this.happinessChange = 0;
         }
 
-        if (this.happiness <= 0) this.destroy();
+        if (this.happiness <= 0) this.destroy(gameState);
     }
 
-    destroy() {
+    destroy(gameState) {
         this.workplace.workers.forEach(worker => worker.leaveWorkplace());
         gameState.removeNode(this);
     }
@@ -302,6 +333,7 @@ export class Factory extends Node {
             let orderCount = commercial.buyProducts(this.productCount);
             this.productCount -= orderCount;
             this.wealth += orderCount;
+            if(this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'wealthGain', orderCount);
         }
     }
 
@@ -323,6 +355,8 @@ export class Factory extends Node {
     }
 }
 
+
+
 class WorkPlace {
     constructor(workerLimit = 1) {
         this.workers = [];
@@ -331,7 +365,7 @@ class WorkPlace {
     }
 
     isFullyStaffed() {
-        return this.workers.length >= workerLimit;
+        return this.workers.length >= this.workerLimit;
     }
 
     addWorker(worker) {

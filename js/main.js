@@ -15,7 +15,7 @@ class App {
     init() {
         console.info('App initialized');
         this.setupButtonListeners();
-        this.gameStateToggle(); // manual start
+        // this.gameStateToggle(); // manual start
     }
 
     initGame(townSize) {
@@ -86,5 +86,6 @@ window.onload = () => {
     const alert = new Alert();
     window.alert = alert;
     const app = new App();
+    window.app = app; // TODO - for tests
     app.init();
 }

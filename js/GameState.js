@@ -111,6 +111,7 @@ export class GameState {
 
     addCoins(amount) {
         this.coins += amount;
+        console.info("coins increased:",amount);
     }
 
     canAffordResident() {
@@ -173,7 +174,7 @@ export class GameState {
     }
 
     findCommercialsForFactory(factoryNode) {
-        return this.nodes
+        factoryNode.productBuyers = this.nodes
             .filter(node =>
                 node instanceof Commercial &&
                 node.canBuyProduct() &&

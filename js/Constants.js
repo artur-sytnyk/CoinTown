@@ -25,6 +25,8 @@ export const Constants = {
     NODE_SIZE: 10, // Node radius
     CONNECTIONS_LIMIT: 5, // Connections limit for each node
     HAPPINESS_LIMIT: 100, // Happiness limitation
+    CENTRAL_NODE_GAIN_COINS: false,
+    CENTRAL_NODE_GAIN_DELAY: 4,
 
     // Areas / Ranges
     SHOPPING_RANGE: 160, // Initial range for resident to go shopping
