@@ -63,10 +63,11 @@ class App {
     }
 
     speedToggle() {
-        if(this.game.speedMultiplier >= 4) {
-            this.game.speedMultiplier = 1;
+        const speed = this.game.speedMultiplier;
+        if(speed >= 4) {
+            this.game.setSpeedMultiplier(1);
         } else {
-            this.game.speedMultiplier *= 2;
+            this.game.setSpeedMultiplier(speed * 2);
         }
         document.getElementById('speed').innerText = 'x' + this.game.speedMultiplier;
     }

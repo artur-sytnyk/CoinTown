@@ -8,11 +8,10 @@ export class Game {
         this.screen = null; // for screen DI
         this.isRunning = false;
         this.updateCounter = 0;
-        this.updateInterval = 250; // 250ms = 4 times per second
-        this.lastTimestamp = 0;
-        this.lastUpdateDeltaTime = 0;
+        this.updateInterval = 250; // 250ms base update
         this.speedMultiplier = 1;
-        console.info('Game created');
+        this.lastUpdateTime = performance.now();
+        console.info("Game created");
     }
 
     setScreen(screen) {
@@ -21,46 +20,49 @@ export class Game {
     }
 
     start() {
-        if(this.isRunning) return;
+        if (this.isRunning) return;
         this.isRunning = true;
-        this.lastTimestamp = performance.now();
-        this.lastUpdateDeltaTime = 0;
+        this.lastUpdateTime = performance.now();
         requestAnimationFrame(this.gameLoop.bind(this));
     }
 
     stop() {
         this.isRunning = false;
-        this.lastUpdateDeltaTime = 0;
     }
 
     gameLoop(timestamp) {
         if (!this.isRunning) return;
-        const speedAffectedInterval = this.updateInterval / this.speedMultiplier;
 
-        // Accumulate update delta time
+        // Calculate time difference (delta time)
+        const deltaTime = timestamp - this.lastUpdateTime;
 
-        this.lastUpdateDeltaTime += (timestamp - this.lastTimestamp) / 1000;
-        this.lastTimestamp = timestamp;
-
-        // Update if interval reached.
-        if (this.lastUpdateDeltaTime >= speedAffectedInterval / 1000) {
-            this.update(); 
-            if (this.screen) this.screen.render();
-            this.lastUpdateDeltaTime -= speedAffectedInterval / 1000;
+        // Check if it's time to update game logic
+        if (deltaTime >= this.updateInterval / this.speedMultiplier) {
+            this.update();
+            this.lastUpdateTime = timestamp;
         }
+
+        // Always render at max FPS for smooth visuals
+        if (this.screen) this.screen.render();
+
         requestAnimationFrame(this.gameLoop.bind(this));
     }
 
     update() {
         this.updateCounter++;
 
-        this.gameState.nodes.forEach(node => {
+        this.gameState.nodes.forEach((node) => {
             node.update(this.updateCounter, this.gameState);
         });
         this.gameState.onCoinsChange();
 
-        if(this.updateCounter === 24) this.updateCounter = 0;
+        if (this.updateCounter === 24) this.updateCounter = 0;
     }
+
+    setSpeedMultiplier(newSpeed) {
+        this.speedMultiplier = newSpeed;
+    }
+
 
     //  ### ### ### ### ### Additional Functions ### ### ### ### ###
 
