@@ -25,7 +25,7 @@ export const Constants = {
     NODE_SIZE: 10, // Node radius
     CONNECTIONS_LIMIT: 5, // Connections limit for each node
     HAPPINESS_LIMIT: 100, // Happiness limitation
-    CENTRAL_NODE_GAIN_COINS: true,
+    // CENTRAL_NODE_GAIN_COINS: true,
     CENTRAL_NODE_GAIN_DELAY: 4,
 
     // Areas / Ranges
@@ -40,5 +40,7 @@ export const Constants = {
     COST_INCREASE_R: 10,
     COST_INCREASE_C: 20,
     COST_INCREASE_F: 20,
+    GAME_MODE_NORMAL: 'normal',
+    GAME_MODE_HARD: 'hard',
 
 }

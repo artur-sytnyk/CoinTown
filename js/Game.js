@@ -3,8 +3,8 @@ import { GameState } from "./GameState.js";
 import { Resident, Commercial, Factory } from "./GameNode.js";
 
 export class Game {
-    constructor(size) {
-        this.gameState = new GameState(size);
+    constructor(size, mode) {
+        this.gameState = new GameState(size, mode);
         this.screen = null; // for screen DI
         this.isRunning = false;
         this.updateCounter = 0;

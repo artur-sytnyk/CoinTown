@@ -4,7 +4,7 @@ import { Connection } from "./Connection.js";
 import { nodeDistance, removeItem } from "./utils.js";
 
 export class GameState {
-    constructor(size = Constants.SMALL_TOWN_SIZE) {
+    constructor(size = Constants.SMALL_TOWN_SIZE, mode = Constants.GAME_MODE_NORMAL) {
         this.coins = Constants.STARTING_COINS;
         this.nodeCosts = {
             resident: 0,
@@ -12,6 +12,7 @@ export class GameState {
             factory: 0
         };
         this.size = size;
+        this.mode = mode;
         this.nodes = [new CentralNode(size / 2, size / 2)];
         this.connections = [];
         this.onCoinsChange();
@@ -19,13 +20,15 @@ export class GameState {
     }
 
     // ### ### ### GameState / savegame functions ### ### ###
-    restart() {
+    restart(size = Constants.SMALL_TOWN_SIZE, mode = Constants.GAME_MODE_NORMAL) {
         this.coins = Constants.STARTING_COINS;
         this.nodeCosts = {
             resident: 0,
             commercial: 0,
             factory: 0
         };
+        this.size = size;
+        this.mode = mode;
         this.nodes = [new CentralNode(size / 2, size / 2)];
         this.connections = [];
         this.onCoinsChange();
@@ -38,6 +41,7 @@ export class GameState {
         }
         this.coins = data.coins;
         this.nodeCosts = data.nodeCosts;
+        this.mode = data.mode;
         this.connections = [];
         this.nodes = data.nodes; // TODO not sure
         this.onCoinsChange();
@@ -47,11 +51,13 @@ export class GameState {
 
     addNode(node) {
         this.nodes.push(node);
+        this.onNodeCountChange();
     }
 
     removeNode(node) {
         node.connections.forEach(con => this.removeConnection(con));
         this.nodes = removeItem(this.nodes, node);
+        this.onNodeCountChange();
     }
 
     spawnNode(node) {
@@ -200,6 +206,10 @@ export class GameState {
         document.getElementById('rCost').innerText = this.nodeCosts.resident;
         document.getElementById('cCost').innerText = this.nodeCosts.commercial;
         document.getElementById('fCost').innerText = this.nodeCosts.factory;
+    }
+
+    onNodeCountChange() {
+        document.getElementById('node-score').innerText = this.nodes.length;
     }
 
     isWithinRange(nodeA, nodeB, range) {

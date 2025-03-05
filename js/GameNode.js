@@ -51,7 +51,7 @@ export class CentralNode extends Node {
     }
 
     update(updateCounter, gameState) {
-        if (Constants.CENTRAL_NODE_GAIN_COINS && 
+        if (gameState.mode = Constants.GAME_MODE_NORMAL &&
             updateCounter % Constants.CENTRAL_NODE_GAIN_DELAY === 0
         ) gameState.addCoins(1);
     }
@@ -110,13 +110,13 @@ export class Resident extends Node {
     }
 
     leaveWorkplace() {
-        if(this.workplace) this.workplace.removeWorker(this);
+        if (this.workplace) this.workplace.removeWorker(this);
         this.workplace = null;
     }
 
     addWealth(amount) {
         this.wealth += amount;
-        if(this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'wealthGain', amount);
+        if (this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'wealthGain', amount);
     }
 
     startShopping(gameState) {
@@ -140,7 +140,7 @@ export class Resident extends Node {
         this.shoppingRoute[0].shop();
         this.wealth--;
         this.shoppedToday++;
-        if(this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'wealthGain', 1);
+        if (this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'wealthGain', 1);
     }
 }
 
@@ -208,7 +208,7 @@ export class Commercial extends Node {
         let orderCount = Math.min(this.wealth, availableAmount, productSpaceLeft);
         this.wealth -= orderCount;
         this.productCount += orderCount;
-        if(this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'productGain', orderCount);
+        if (this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'productGain', orderCount);
         return orderCount;
     }
 
@@ -237,7 +237,7 @@ export class Commercial extends Node {
         // Own growth
         portion += this.wealthToday - (portion * 3);
         this.wealth += portion;
-        if(this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'wealthGain', portion);
+        if (this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'wealthGain', portion);
     }
 
     // Workplace methods
@@ -286,7 +286,7 @@ export class Factory extends Node {
         if (updateCounter === 8) {
             let totalWorkers = this.workplace.workers.length;
             this.addProduct(totalWorkers * this.productMultiplier);
-            if(this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'productGain', this.productMultiplier);
+            if (this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'productGain', this.productMultiplier);
             if (this.wealth >= totalWorkers * this.productMultiplier) {
                 this.happinessChange += 5;
                 this.workplace.workers.forEach(worker => {
@@ -333,7 +333,7 @@ export class Factory extends Node {
             let orderCount = commercial.buyProducts(this.productCount);
             this.productCount -= orderCount;
             this.wealth += orderCount;
-            if(this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'wealthGain', orderCount);
+            if (this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'wealthGain', orderCount);
         }
     }
 

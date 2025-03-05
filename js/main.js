@@ -10,6 +10,7 @@ class App {
         this.game = new Game(Constants.SMALL_TOWN_SIZE);
         this.screen = new Screen(this.game);
         this.game.setScreen(this.screen);
+        this.sound = false;
     }
 
     init() {
@@ -33,23 +34,31 @@ class App {
         this.game.stop();
     }
 
-    restartGame() {
-        this.initGame(Constants.SMALL_TOWN_SIZE)
-        // TODO define exactly
+    saveGame() {
+        // TODO
     }
 
     loadGame() {
         // TODO
     }
 
+    restartGame() {
+        this.initGame(Constants.SMALL_TOWN_SIZE)
+        // TODO define exactly
+    }
+
     setupButtonListeners() {
         document.getElementById('gameStateToggle').addEventListener('click', this.gameStateToggle.bind(this));
         document.getElementById('simulationSpeedBtn').addEventListener('click', this.speedToggle.bind(this));
+        document.getElementById('saveGameBtn').addEventListener('click', this.saveGame.bind(this));
+        document.getElementById('loadGameBtn').addEventListener('click', this.loadGame.bind(this));
         document.getElementById('restartBtn').addEventListener('click', this.restartGame.bind(this));
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Space') document.getElementById('gameStateToggle').click();
+        document.addEventListener('keydown', function (event) {
+            if (event.key === ' ') document.getElementById('gameStateToggle').click();
         });
         this.setupBuyButtons();
+        this.setupMenuToggle();
+        this.setupSoundToggle();
     }
 
     gameStateToggle() {
@@ -64,7 +73,7 @@ class App {
 
     speedToggle() {
         const speed = this.game.speedMultiplier;
-        if(speed >= 4) {
+        if (speed >= 4) {
             this.game.setSpeedMultiplier(1);
         } else {
             this.game.setSpeedMultiplier(speed * 2);
@@ -80,6 +89,27 @@ class App {
 
     buyNode(type) {
         this.screen.placeNode(type);
+    }
+
+    setupMenuToggle() {
+        const menuBtn = document.getElementById('menuBtn');
+        menuBtn.addEventListener('click', () => {
+            menuBtn.classList.toggle('show');
+        });
+    }
+
+    setupSoundToggle() {
+        const soundBtn = document.getElementById('soundBtn');
+        const bgMusic = new Audio("../assets/audio/bg-sound.wav");
+        bgMusic.loop = true;
+        bgMusic.volume = 0.2;
+
+        soundBtn.addEventListener('click', () => {
+            if (this.sound) bgMusic.pause();
+            else bgMusic.play();
+            this.sound = !this.sound;
+            soundBtn.innerText = (this.sound) ? '🕪' : '🕨';
+        });
     }
 }
 

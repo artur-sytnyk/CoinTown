@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,21 +8,33 @@
     <link rel="icon" type="image/png" href="./assets/img/coin.png" />
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <canvas id="canvas"></canvas>
     <div id="alert-wrapper"></div>
-    
-    <div class="menu-button">
+
+    <div id="menuBtn" class="menu-button">
         ☰
         <div class="menu-content">
-            <button id="authBtn">Login</button>
             <button id="saveGameBtn">Save Game</button>
+            <button id="loadGameBtn">Load Game</button>
             <button id="restartBtn">Restart</button>
         </div>
     </div>
+    <div id="helpBtn" class="help-button">
+        ?
+        <div class="help-text">
+            <p>Welcome to the game! Place nodes, manage resources, and build your town.</p>
+        </div>
+    </div>
     <div class="coins-display">
+        Nodes: <span id="node-score">1</span> |
         <span id="coins">0</span> &#x1FA99;
     </div>
+    <div id="soundBtn" class="sound-button">
+        🕨
+    </div>
+
     <div class="zoom-controls">
         Zoom: <span id="zoomLevel">1</span>
         <button id="zoomInBtn">+</button>
@@ -45,4 +58,5 @@
 
     <script type="module" src="js/main.js"></script>
 </body>
+
 </html>

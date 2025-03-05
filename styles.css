@@ -5,6 +5,7 @@ html {
     overflow: hidden;
     width: 100vw;
     height: 100vh;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 /* .canvas-wrapper {
@@ -61,6 +62,11 @@ button:hover {
 }
 
 .menu-button:hover .menu-content {
+    display: flex;
+    flex-direction: row;
+}
+
+.menu-button.show .menu-content {
     display: flex;
     flex-direction: row;
 }
@@ -199,3 +205,57 @@ button:hover {
     top: -100px;
     left: -100px;
 } */
+
+
+/* ### ### ### Sound ### ### ### */
+
+.sound-button {
+    font-size: 2rem;
+    padding: 0 1rem;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    display: flex;
+}
+
+.sound-button:hover {
+    color: gold;
+}
+
+
+/* ### ### ### Help Text ### ### ### */
+
+.help-button {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    font-size: 2rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.help-text {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    display: none;
+    padding: 1rem;
+    color: #333;
+    border-radius: 6px;
+    border-right: 2px solid #555;
+    min-width: 200px;
+    width: max-content;
+    max-width: 400px;
+    font-size: 1.2rem;
+    /* background-color: #fff; */
+}
+
+.help-button:hover {
+    color: gold;
+}
+
+.help-button:hover .help-text {
+    display: flex;
+}
+
