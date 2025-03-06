@@ -24,7 +24,11 @@
     <div id="helpBtn" class="help-button">
         ?
         <div class="help-text">
-            <p>Welcome to the game! Place nodes, manage resources, and build your town.</p>
+            <p>Welcome to the game!</p>
+            <p>Try to grow your town as large as possible.</p>
+            <p>Resident is happy to work and buy stuff each day.</p>
+            <p>Factory is happy when worker produces goods and it is sold to commercials.</p>
+            <p>Commercial is happy when worker can sell goods to residents.</p>
         </div>
     </div>
     <div class="coins-display">
@@ -35,20 +39,30 @@
         🕨
     </div>
 
-    <div id="saveGamesOverlay" class="modal-overlay">
+    <div id="saveGamesOverlay" class="overlay">
         <div class="savegames-content">
             Saves
             <div class="save-slot">
-                <button id="save1">Save Slot 1</button>
+                <button id="save1">Empty save</button>
                 <span id="deleteSave1">🗑</span>
             </div>
             <div class="save-slot">
-                <button id="save2">Save Slot 2</button>
+                <button id="save2">Empty save</button>
                 <span id="deleteSave2">🗑</span>
             </div>
             <div class="save-slot">
-                <button id="save3">Save Slot 3</button>
+                <button id="save3">Empty save</button>
                 <span id="deleteSave3">🗑</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmOverlay" class="overlay">
+        <div class="confirm-content">
+            <p id="confirmText"></p>
+            <div class="confirm-buttons">
+                <button id="confirmYes">Yes</button>
+                <button id="confirmNo">No</button>
             </div>
         </div>
     </div>

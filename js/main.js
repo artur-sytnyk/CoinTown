@@ -3,7 +3,8 @@ import { Constants } from './Constants.js';
 import { Game } from './Game.js';
 import { Screen } from './Screen.js';
 import { Alert } from './Alert.js';
-import './utils.js'; // prototyped capitalization
+import { SaveManager } from './SaveManager.js';
+import './utils.js';
 
 class App {
     constructor() {
@@ -11,19 +12,24 @@ class App {
         this.screen = new Screen(this.game);
         this.game.setScreen(this.screen);
         this.sound = false;
+        this.savegamesAction = 'load'; // save / load
+        this.saveSlot = 1;
     }
 
     init() {
         console.info('App initialized');
+        SaveManager.init();
         this.setupButtonListeners();
-        // this.gameStateToggle(); // manual start
     }
 
-    initGame(townSize) {
-        this.game = new Game(townSize);
+    initGame(gameState) {
+        this.game = new Game(gameState.size, gameState.mode);
         this.screen = new Screen(this.game);
         this.game.setScreen(this.screen);
-        // game initialized - alert user?
+    }
+
+    initGameFromState(gameState) {
+
     }
 
     startGame() {
@@ -50,13 +56,13 @@ class App {
     setupButtonListeners() {
         document.getElementById('gameStateToggle').addEventListener('click', this.gameStateToggle.bind(this));
         document.getElementById('simulationSpeedBtn').addEventListener('click', this.speedToggle.bind(this));
-        document.getElementById('saveGameBtn').addEventListener('click', this.saveGame.bind(this));
         document.getElementById('restartBtn').addEventListener('click', this.restartGame.bind(this));
         document.addEventListener('keydown', function (event) {
             if (event.key === ' ') document.getElementById('gameStateToggle').click();
         });
         this.setupBuyButtons();
         this.setupMenuToggle();
+        this.setupHelpToggle();
         this.setupSoundToggle();
         this.setupSavegamesModal();
     }
@@ -98,6 +104,13 @@ class App {
         });
     }
 
+    setupHelpToggle() {
+        const helpBtn = document.getElementById('helpBtn');
+        helpBtn.addEventListener('click', () => {
+            helpBtn.classList.toggle('show');
+        });
+    }
+
     setupSoundToggle() {
         const soundBtn = document.getElementById('soundBtn');
         const bgMusic = new Audio("../assets/audio/bg-sound.wav");
@@ -116,6 +129,7 @@ class App {
         const saveGamesOverlay = document.getElementById('saveGamesOverlay');
         const saveGamesContent = saveGamesOverlay.querySelector('.savegames-content');
         const loadGameBtn = document.getElementById('loadGameBtn');
+        const saveGameBtn = document.getElementById('saveGameBtn');
 
         saveGamesOverlay.addEventListener('click', () => {
             saveGamesOverlay.classList.remove('show');
@@ -124,9 +138,56 @@ class App {
             event.stopPropagation()
         });
         loadGameBtn.addEventListener('click', () => {
+            this.savegamesAction = 'load';
             saveGamesOverlay.classList.add('show');
         });
+        saveGameBtn.addEventListener('click', () => {
+            this.savegamesAction = 'save';
+            saveGamesOverlay.classList.add('show');
+        });
+    }
 
+    saveSlotAction(slotId) {
+        switch (this.savegamesAction) {
+            case 'save': {
+                if (SaveManager.hasSave[slotId]) {
+                    this.showConfirmOverlay(
+                        "Are you sure to overwrite savefile?",
+                        () => { SaveManager.save(slotId, this.game.gameState); }
+                    )
+                } else {
+                    SaveManager.save(slotId, this.game.gameState);
+                }
+                break;
+            }
+            case 'load': {
+                const data = SaveManager.load(slotId);
+                if (data) this.showConfirmOverlay(
+                    "Are you sure to load another savefile? Current proggress will be lost",
+                    () => {
+                        this.saveSlot = slotId;
+                        // TODO load game with gamestate
+                    }
+                )
+                break;
+            }
+            default: alert.error("Wrong save slot action");
+        }
+    }
+
+    showConfirmOverlay(message, confirmedFunc) {
+        const overlay = document.getElementById('confirmOverlay');
+        const textEl = overlay.querySelector('#confirmText');
+        const yesBtn = document.getElementById('confirmYes');
+        const noBtn = document.getElementById('confirmNo');
+
+        overlay.classList.add('show');
+        textEl.innerText = message;
+        yesBtn.addEventListener('click', () => {
+            confirmedFunc();
+            overlay.classList.remove('show');
+        }, { once: true });
+        noBtn.addEventListener('click', () => overlay.classList.remove('show'), { once: true });
     }
 }
 
