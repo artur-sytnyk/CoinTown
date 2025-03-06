@@ -51,7 +51,6 @@ class App {
         document.getElementById('gameStateToggle').addEventListener('click', this.gameStateToggle.bind(this));
         document.getElementById('simulationSpeedBtn').addEventListener('click', this.speedToggle.bind(this));
         document.getElementById('saveGameBtn').addEventListener('click', this.saveGame.bind(this));
-        document.getElementById('loadGameBtn').addEventListener('click', this.loadGame.bind(this));
         document.getElementById('restartBtn').addEventListener('click', this.restartGame.bind(this));
         document.addEventListener('keydown', function (event) {
             if (event.key === ' ') document.getElementById('gameStateToggle').click();
@@ -59,6 +58,7 @@ class App {
         this.setupBuyButtons();
         this.setupMenuToggle();
         this.setupSoundToggle();
+        this.setupSavegamesModal();
     }
 
     gameStateToggle() {
@@ -110,6 +110,23 @@ class App {
             this.sound = !this.sound;
             soundBtn.innerText = (this.sound) ? '🕪' : '🕨';
         });
+    }
+
+    setupSavegamesModal() {
+        const saveGamesOverlay = document.getElementById('saveGamesOverlay');
+        const saveGamesContent = saveGamesOverlay.querySelector('.savegames-content');
+        const loadGameBtn = document.getElementById('loadGameBtn');
+
+        saveGamesOverlay.addEventListener('click', () => {
+            saveGamesOverlay.classList.remove('show');
+        })
+        saveGamesContent.addEventListener('click', (event) => {
+            event.stopPropagation()
+        });
+        loadGameBtn.addEventListener('click', () => {
+            saveGamesOverlay.classList.add('show');
+        });
+
     }
 }
 
