@@ -4,11 +4,11 @@ import { getRandomInt, removeItem } from './utils.js';
 
 // Nodes are "Buildings"
 export default class Node {
-    constructor(x, y, nodeAnimationFunc = null) {
+    constructor(x, y, nodeAnimation = null) {
         this.x = x;
         this.y = y;
         this.connections = [];
-        this.nodeAnimationFunc = nodeAnimationFunc;
+        this.nodeAnimation = nodeAnimation;
     }
 
     render(ctx, color = 'black') {
@@ -40,6 +40,14 @@ export default class Node {
 
 // "Administration"
 export class CentralNode extends Node {
+    toJSON() {
+        return {
+            type: 'central',
+            x: this.x,
+            y: this.y
+        }
+    }
+
     render(ctx) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, Constants.NODE_SIZE * 2, 0, 2 * Math.PI);
@@ -61,8 +69,8 @@ export class CentralNode extends Node {
 
 // Residents
 export class Resident extends Node {
-    constructor(x, y, nodeAnimationFunc = null, wealth = 0) {
-        super(x, y, nodeAnimationFunc);
+    constructor(x, y, nodeAnimation = null, wealth = 2) {
+        super(x, y, nodeAnimation);
         this.workplace = null;
         this.wealth = wealth;
         this.happiness = 50;
@@ -71,6 +79,14 @@ export class Resident extends Node {
         this.isShopping = false;
         this.shoppedToday = 0;
         this.shoppingRoute = [];
+    }
+
+    toJSON() {
+        return {
+            type: 'resident',
+            x: this.x,
+            y: this.y
+        }
     }
 
     render(ctx) {
@@ -116,7 +132,7 @@ export class Resident extends Node {
 
     addWealth(amount) {
         this.wealth += amount;
-        if (this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'wealthGain', amount);
+        if (this.nodeAnimation) this.nodeAnimation(this, 'wealthGain', amount);
     }
 
     startShopping(gameState) {
@@ -140,7 +156,7 @@ export class Resident extends Node {
         this.shoppingRoute[0].shop();
         this.wealth--;
         this.shoppedToday++;
-        if (this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'wealthGain', 1);
+        if (this.nodeAnimation) this.nodeAnimation(this, 'wealthGain', 1);
     }
 }
 
@@ -148,8 +164,8 @@ export class Resident extends Node {
 
 // Workplaces
 export class Commercial extends Node {
-    constructor(x, y, nodeAnimationFunc = null, wealth = 2, productCount = 0, productLimit = 100, workerLimit = 1) {
-        super(x, y, nodeAnimationFunc);
+    constructor(x, y, nodeAnimation = null, wealth = 2, productCount = 0, productLimit = 100, workerLimit = 1) {
+        super(x, y, nodeAnimation);
         this.wealth = wealth;
         this.wealthToday = 0;
         this.productCount = productCount;
@@ -157,6 +173,14 @@ export class Commercial extends Node {
         this.happiness = 50;
         this.happinessChange = 0;
         this.workplace = new WorkPlace(workerLimit);
+    }
+    
+    toJSON() {
+        return {
+            type: 'commercial',
+            x: this.x,
+            y: this.y
+        }
     }
 
     render(ctx) {
@@ -208,7 +232,7 @@ export class Commercial extends Node {
         let orderCount = Math.min(this.wealth, availableAmount, productSpaceLeft);
         this.wealth -= orderCount;
         this.productCount += orderCount;
-        if (this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'productGain', orderCount);
+        if (this.nodeAnimation) this.nodeAnimation(this, 'productGain', orderCount);
         return orderCount;
     }
 
@@ -237,7 +261,7 @@ export class Commercial extends Node {
         // Own growth
         portion += this.wealthToday - (portion * 3);
         this.wealth += portion;
-        if (this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'wealthGain', portion);
+        if (this.nodeAnimation) this.nodeAnimation(this, 'wealthGain', portion);
     }
 
     // Workplace methods
@@ -261,8 +285,8 @@ export class Commercial extends Node {
 
 
 export class Factory extends Node {
-    constructor(x, y, nodeAnimationFunc = null, wealth = 2, productCount = 0, productLimit = 100, workerLimit = 1) {
-        super(x, y, nodeAnimationFunc);
+    constructor(x, y, nodeAnimation = null, wealth = 2, productCount = 0, productLimit = 100, workerLimit = 1) {
+        super(x, y, nodeAnimation);
         this.wealth = wealth;
         this.productCount = productCount;
         this.productLimit = productLimit;
@@ -272,6 +296,14 @@ export class Factory extends Node {
         this.happiness = 50;
         this.happinessChange = 0;
         this.workplace = new WorkPlace(workerLimit);
+    }
+    
+    toJSON() {
+        return {
+            type: 'factory',
+            x: this.x,
+            y: this.y
+        }
     }
 
     render(ctx) {
@@ -286,7 +318,7 @@ export class Factory extends Node {
         if (updateCounter === 8) {
             let totalWorkers = this.workplace.workers.length;
             this.addProduct(totalWorkers * this.productMultiplier);
-            if (this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'productGain', this.productMultiplier);
+            if (this.nodeAnimation) this.nodeAnimation(this, 'productGain', this.productMultiplier);
             if (this.wealth >= totalWorkers * this.productMultiplier) {
                 this.happinessChange += 5;
                 this.workplace.workers.forEach(worker => {
@@ -333,7 +365,7 @@ export class Factory extends Node {
             let orderCount = commercial.buyProducts(this.productCount);
             this.productCount -= orderCount;
             this.wealth += orderCount;
-            if (this.nodeAnimationFunc) this.nodeAnimationFunc(this, 'wealthGain', orderCount);
+            if (this.nodeAnimation) this.nodeAnimation(this, 'wealthGain', orderCount);
         }
     }
 

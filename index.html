@@ -25,14 +25,15 @@
         ?
         <div class="help-text">
             <p>Welcome to the game!</p>
-            <p>Try to grow your town as large as possible.</p>
-            <p>Resident is happy to work and buy stuff each day.</p>
-            <p>Factory is happy when worker produces goods and it is sold to commercials.</p>
-            <p>Commercial is happy when worker can sell goods to residents.</p>
+            <p>Try to grow your town as large as possible. Pops is the score!</p>
+            <p>Resident is happy to work and buy stuff each day. Resident is a pop.</p>
+            <p>Factory is happy when worker produces goods which is sold to commercials.</p>
+            <p>Commercial is happy when worker can sell goods to other residents.</p>
         </div>
     </div>
-    <div class="coins-display">
-        Nodes: <span id="node-score">1</span> |
+    <div class="game-display">
+        <span id="town-name">-</span> | 
+        pops: <span id="node-score">1</span> | 
         <span id="coins">0</span> &#x1FA99;
     </div>
     <div id="soundBtn" class="sound-button">
@@ -43,15 +44,15 @@
         <div class="savegames-content">
             Saves
             <div class="save-slot">
-                <button id="save1">Empty save</button>
+                <button id="saveBtn1">Empty save</button>
                 <span id="deleteSave1">🗑</span>
             </div>
             <div class="save-slot">
-                <button id="save2">Empty save</button>
+                <button id="saveBtn2">Empty save</button>
                 <span id="deleteSave2">🗑</span>
             </div>
             <div class="save-slot">
-                <button id="save3">Empty save</button>
+                <button id="saveBtn3">Empty save</button>
                 <span id="deleteSave3">🗑</span>
             </div>
         </div>

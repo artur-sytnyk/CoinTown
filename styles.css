@@ -87,8 +87,8 @@ button:hover {
     padding: 0.5rem;
 }
 
-.coins-display {
-    font-size: 1.5rem;
+.game-display {
+    font-size: 1.3rem;
     left: 50%;
     position: absolute;
     top: 10px;
@@ -230,8 +230,8 @@ button:hover {
     position: absolute;
     top: 50px;
     left: 0;
-    font-size: 2rem;
-    padding: 0.5rem 0.8rem;
+    font-size: 1.8rem;
+    padding: 0.5rem 1rem;
     cursor: pointer;
 }
 
@@ -351,7 +351,7 @@ button:hover {
 
 /* ### ### ### Confirm modal ### ### ### */
 
-.confirm-box {
+.confirm-content {
     background: white;
     padding: 1.5rem;
     border-radius: 8px;
@@ -363,22 +363,30 @@ button:hover {
     display: flex;
     gap: 1rem;
     justify-content: center;
-    margin-top: 1rem;
+    margin-top: 2rem;
 }
 
 .confirm-buttons button {
-    padding: 0.5rem 1rem;
+    color: white;
+    padding: 0.5rem 2rem;
     border: none;
     cursor: pointer;
     border-radius: 4px;
 }
 
 #confirmYes {
-    background-color: green;
-    color: white;
+    background-color: #008000aa;
+}
+
+#confirmYes:hover {
+    background-color: #008000;
 }
 
 #confirmNo {
-    background-color: red;
-    color: white;
+    background-color: #ff0000aa;
 }
+
+#confirmNo:hover {
+    background-color: #ff0000;
+}
+

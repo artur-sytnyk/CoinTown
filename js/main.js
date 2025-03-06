@@ -8,7 +8,7 @@ import './utils.js';
 
 class App {
     constructor() {
-        this.game = new Game(Constants.SMALL_TOWN_SIZE);
+        this.game = new Game();
         this.screen = new Screen(this.game);
         this.game.setScreen(this.screen);
         this.sound = false;
@@ -17,19 +17,8 @@ class App {
     }
 
     init() {
-        console.info('App initialized');
-        SaveManager.init();
+        SaveManager.updateSaveslots();
         this.setupButtonListeners();
-    }
-
-    initGame(gameState) {
-        this.game = new Game(gameState.size, gameState.mode);
-        this.screen = new Screen(this.game);
-        this.game.setScreen(this.screen);
-    }
-
-    initGameFromState(gameState) {
-
     }
 
     startGame() {
@@ -40,17 +29,38 @@ class App {
         this.game.stop();
     }
 
-    saveGame() {
-        // TODO
+    saveGame(saveId) {
+        if (SaveManager.hasSave[saveId]) {
+            this.showConfirmOverlay(
+                "Are you sure to overwrite savefile?",
+                () => { SaveManager.save(saveId, this.game.gameState); }
+            );
+        } else {
+            // TODO add save name setting
+            SaveManager.save(saveId, this.game.gameState);
+        }
     }
 
-    loadGame() {
-        // TODO
+    loadGame(saveId) {
+        const data = SaveManager.load(saveId);
+        if (data) this.showConfirmOverlay(
+            "Are you sure to load another savefile? Current proggress will be lost",
+            () => {
+                this.saveSlot = saveId;
+                this.game.loadFromState(data.gameState);
+            }
+        )
+    }
+
+    deleteGame(saveId) {
+        this.showConfirmOverlay(
+            "Are you sure want to delete savefile?",
+            () => { SaveManager.delete(saveId); }
+        )
     }
 
     restartGame() {
-        this.initGame(Constants.SMALL_TOWN_SIZE)
-        // TODO define exactly
+        this.game.loadFromState(this.game.gameState);
     }
 
     setupButtonListeners() {
@@ -145,30 +155,23 @@ class App {
             this.savegamesAction = 'save';
             saveGamesOverlay.classList.add('show');
         });
+
+        document.getElementById('saveBtn1').addEventListener('click', () => { this.saveSlotAction(1); });
+        document.getElementById('saveBtn2').addEventListener('click', () => { this.saveSlotAction(2); });
+        document.getElementById('saveBtn3').addEventListener('click', () => { this.saveSlotAction(3); });
+        document.getElementById('deleteSave1').addEventListener('click', () => { this.deleteGame(1); });
+        document.getElementById('deleteSave2').addEventListener('click', () => { this.deleteGame(2); });
+        document.getElementById('deleteSave3').addEventListener('click', () => { this.deleteGame(3); });
     }
 
-    saveSlotAction(slotId) {
+    saveSlotAction(saveId) {
         switch (this.savegamesAction) {
             case 'save': {
-                if (SaveManager.hasSave[slotId]) {
-                    this.showConfirmOverlay(
-                        "Are you sure to overwrite savefile?",
-                        () => { SaveManager.save(slotId, this.game.gameState); }
-                    )
-                } else {
-                    SaveManager.save(slotId, this.game.gameState);
-                }
+                this.saveGame(saveId);
                 break;
             }
             case 'load': {
-                const data = SaveManager.load(slotId);
-                if (data) this.showConfirmOverlay(
-                    "Are you sure to load another savefile? Current proggress will be lost",
-                    () => {
-                        this.saveSlot = slotId;
-                        // TODO load game with gamestate
-                    }
-                )
+                this.loadGame(saveId);
                 break;
             }
             default: alert.error("Wrong save slot action");
@@ -180,14 +183,21 @@ class App {
         const textEl = overlay.querySelector('#confirmText');
         const yesBtn = document.getElementById('confirmYes');
         const noBtn = document.getElementById('confirmNo');
-
+        // modal
         overlay.classList.add('show');
         textEl.innerText = message;
-        yesBtn.addEventListener('click', () => {
+        // buttons functionality
+        yesBtn.removeEventListener('click', yesBtn._listener);
+        noBtn.removeEventListener('click', noBtn._listener);
+
+        yesBtn._listener = () => {
             confirmedFunc();
             overlay.classList.remove('show');
-        }, { once: true });
-        noBtn.addEventListener('click', () => overlay.classList.remove('show'), { once: true });
+        };
+        noBtn._listener = () => overlay.classList.remove('show');
+
+        yesBtn.addEventListener('click', yesBtn._listener);
+        noBtn.addEventListener('click', noBtn._listener);
     }
 }
 

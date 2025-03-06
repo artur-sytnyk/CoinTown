@@ -16,34 +16,15 @@ export class GameState {
         this.nodes = [new CentralNode(size / 2, size / 2)];
         this.connections = [];
         this.onCoinsChange();
-        console.info('GameState created');
     }
 
-    // ### ### ### GameState / savegame functions ### ### ###
-    restart(size = Constants.SMALL_TOWN_SIZE, mode = Constants.GAME_MODE_NORMAL) {
-        this.coins = Constants.STARTING_COINS;
-        this.nodeCosts = {
-            resident: 0,
-            commercial: 0,
-            factory: 0
-        };
-        this.size = size;
-        this.mode = mode;
-        this.nodes = [new CentralNode(size / 2, size / 2)];
+    loadFromState(gameState) {
+        this.coins = gameState.coins;
+        this.nodeCosts = gameState.nodeCosts;
+        this.size = gameState.size;
+        this.mode = gameState.mode;
+        this.nodes = [];
         this.connections = [];
-        this.onCoinsChange();
-    }
-
-    load(data) {
-        if (!data) {
-            log.warn('No data to load');
-            return
-        }
-        this.coins = data.coins;
-        this.nodeCosts = data.nodeCosts;
-        this.mode = data.mode;
-        this.connections = [];
-        this.nodes = data.nodes; // TODO not sure
         this.onCoinsChange();
     }
 
@@ -67,6 +48,11 @@ export class GameState {
         this.increaseCost(node);
         this.onCoinsChange();
         this.onCostsChange();
+    }
+
+    loadNode(node) {
+        this.connectNode(node);
+        this.addNode(node);
     }
 
     payForNode(node) {

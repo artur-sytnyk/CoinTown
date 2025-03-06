@@ -1,6 +1,6 @@
 import { Constants } from "./Constants.js";
 import { GameState } from "./GameState.js";
-import { Resident, Commercial, Factory } from "./GameNode.js";
+import { Resident, Commercial, Factory, CentralNode } from "./GameNode.js";
 
 export class Game {
     constructor(size, mode) {
@@ -11,12 +11,23 @@ export class Game {
         this.updateInterval = 250; // 250ms base update
         this.speedMultiplier = 1;
         this.lastUpdateTime = performance.now();
-        console.info("Game created");
     }
 
     setScreen(screen) {
         this.screen = screen;
         this.screen.render();
+    }
+
+    loadFromState(gameState) {
+        this.gameState.loadFromState(gameState);
+        this.isRunning = false;
+        this.updateCounter = 0;
+        this.lastUpdateTime = performance.now();
+        this.screen.setsetSize(gameState.size);
+        const nodeAnimation = this.screen.getNodeAnimationFunction();
+        gameState.nodes.forEach(node =>
+            this.loadNode(node.type, node.x, node.y, nodeAnimation)
+        );
     }
 
     start() {
@@ -66,10 +77,6 @@ export class Game {
 
     //  ### ### ### ### ### Additional Functions ### ### ### ### ###
 
-    setTownSize(size) {
-        this.gameState.size = size;
-    }
-
     spawnNode(nodeType, x, y, nodeAnimationFunc) {
         if (this.isAbleToSpawn(x, y)) {
             this.createNode(nodeType, x, y, nodeAnimationFunc);
@@ -107,6 +114,28 @@ export class Game {
                 break;
             case 'factory':
                 this.gameState.spawnNode(new Factory(x, y, nodeAnimationFunc));
+                break;
+            case 'central':
+                this.gameState.spawnNode(new CentralNode(x, y));
+                break;
+            default:
+                alert.error('Unknown node type');
+        }
+    }
+
+    loadNode(nodeType, x, y, nodeAnimationFunc) {
+        switch (nodeType) {
+            case 'resident':
+                this.gameState.loadNode(new Resident(x, y, nodeAnimationFunc));
+                break;
+            case 'commercial':
+                this.gameState.loadNode(new Commercial(x, y, nodeAnimationFunc));
+                break;
+            case 'factory':
+                this.gameState.loadNode(new Factory(x, y, nodeAnimationFunc));
+                break;
+            case 'central':
+                this.gameState.loadNode(new CentralNode(x, y));
                 break;
             default:
                 alert.error('Unknown node type');

@@ -41,13 +41,16 @@ export class Screen {
         this.canvas.height = window.innerHeight;
         this.offset.x = (window.innerWidth / 2) - (this.size / 2);
         this.offset.y = (window.innerHeight / 2) - (this.size / 2);
-        console.info('Canvas initialized');
     }
 
     setupEventListeners() {
         window.addEventListener('resize', () => this.onResize());
         this.addDragEventListeners();
         this.addZoomEventListeners();
+    }
+
+    setSize(size) {
+        this.size = size;
     }
 
     render() {
@@ -306,6 +309,10 @@ export class Screen {
         const y = (event.clientY - this.offset.y) / this.zoomLevel;
         this.game.spawnNode(nodeType, x, y, this.addNodeAnimation.bind(this));
         this.render();
+    }
+
+    getNodeAnimationFunction() {
+        return this.addNodeAnimation.bind(this);
     }
 
     // ### ### ### ### ### Event Listeners ### ### ### ### ###

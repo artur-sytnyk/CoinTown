@@ -3,13 +3,14 @@
 export class SaveManager {
     static hasSave = { 1: false, 2: false, 3: false }
 
-    static init() {
+    static updateSaveslots() {
         for (let i = 1; i <= 3; i++) {
             const data = this.load(i);
-            if (!data) continue;
-            this.hasSave[i] = true;
-            const btn = document.getElementById('save' + i);
-            if(btn) btn.innerText = data.name;
+            const hasData = (!data) ? false : true;
+            this.hasSave[i] = (hasData) ? true : false;
+            document.getElementById('saveBtn' + i).innerText = (hasData) ? data.name : 'Empty save';
+            if (hasData) document.getElementById('deleteSave' + i).classList.add('show');
+            else document.getElementById('deleteSave' + i).classList.remove('show');
         }
     }
 
@@ -26,12 +27,14 @@ export class SaveManager {
         }
         const data = JSON.stringify(saveObject);
         localStorage.setItem(this.getKey(slotId), data);
-        this.hasSave[slotId] = true;
+        this.updateSaveslots();
         alert.success('Game saved');
     }
-    
+
     static delete(slotId) {
         localStorage.removeItem(this.getKey(slotId));
+        this.updateSaveslots();
+        alert.success('Game deleted');
     }
 
     static getKey(slotId) {
