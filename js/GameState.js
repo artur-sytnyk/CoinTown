@@ -105,6 +105,10 @@ export class GameState {
 
     // ### ### ### ### ### Game logic ### ### ### ### ###
 
+    dailyUpdate() {
+        this.addCoins(this.nodes.length);
+    }
+
     addCoins(amount) {
         this.coins += amount;
     }

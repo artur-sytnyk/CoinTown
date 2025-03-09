@@ -77,9 +77,12 @@ export class Game {
         this.gameState.nodes.forEach((node) => {
             node.update(this.updateCounter, this.gameState);
         });
-        this.gameState.onCoinsChange();
 
-        if (this.updateCounter === 24) this.updateCounter = 0;
+        if (this.updateCounter === 24) {
+            this.updateCounter = 0;
+            this.gameState.dailyUpdate();
+        }
+        this.gameState.onCoinsChange();
     }
 
     setSpeedMultiplier(newSpeed) {
