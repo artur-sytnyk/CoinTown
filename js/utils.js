@@ -1,5 +1,5 @@
 
-// hodnotici tabulka - radek 23 - protootypy
+// hodnotici tabulka - radek 23 - prototypy
 String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }

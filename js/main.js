@@ -5,6 +5,7 @@ import { Screen } from './Screen.js';
 import { Alert } from './Alert.js';
 import { SaveManager } from './SaveManager.js';
 import './utils.js';
+import { RandomCityApi } from './apis.js';
 
 class App {
     constructor() {
@@ -33,10 +34,11 @@ class App {
     }
 
     saveGame(saveId) {
-        if (SaveManager.hasSave[saveId]) {
+        const data = SaveManager.load(saveId);
+        if (data) {
             this.showConfirmOverlay(
                 "Are you sure to overwrite savefile?",
-                () => { SaveManager.save(saveId, this.saveName, this.game.gameState); }
+                () => { SaveManager.save(saveId, data.name, this.game.gameState); }
             );
         } else {
             this.showSaveNameFormOverlay(
@@ -84,7 +86,8 @@ class App {
         document.getElementById('simulationSpeedBtn').addEventListener('click', this.speedToggle.bind(this));
         document.getElementById('restartBtn').addEventListener('click', this.restartGame.bind(this));
         document.addEventListener('keydown', function (event) {
-            if (event.key === ' ') document.getElementById('gameStateToggle').click();
+            if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') return;
+            if (event.code === 'Space') document.getElementById('gameStateToggle').click();
         });
         this.setupBuyButtons();
         this.setupMenuToggle();
@@ -170,6 +173,8 @@ class App {
             this.savegamesAction = 'save';
             saveGamesOverlay.classList.add('show');
         });
+        saveBtn.addEventListener('click', () => { this.setSaveslotName(saveBtn); });
+
 
         document.getElementById('saveSlotBtn1').addEventListener('click', () => { this.saveSlotAction(1); });
         document.getElementById('saveSlotBtn2').addEventListener('click', () => { this.saveSlotAction(2); });
@@ -177,8 +182,9 @@ class App {
         document.getElementById('deleteSave1').addEventListener('click', () => { this.deleteGame(1); });
         document.getElementById('deleteSave2').addEventListener('click', () => { this.deleteGame(2); });
         document.getElementById('deleteSave3').addEventListener('click', () => { this.deleteGame(3); });
-        saveBtn.addEventListener('click', () => { this.setSaveslotName(saveBtn); });
-
+        document.getElementById('townNameRandomizer').addEventListener('click', async () => {
+            await this.RandomizeTownName();
+        });
     }
 
     setSaveslotName(saveBtn) {
@@ -205,6 +211,19 @@ class App {
             default: alert.error("Wrong save slot action");
         }
         document.getElementById('saveGamesOverlay').click();
+    }
+
+    async RandomizeTownName() {
+        const saveBtn = document.getElementById('saveNameBtn');
+        saveBtn.disabled = true;
+        saveBtn.innerText = "Wait..";
+
+        const nameInput = document.getElementById('townNameInput');
+        const randomName = await RandomCityApi.fetchRandomCity();
+        nameInput.value = randomName;
+
+        saveBtn.disabled = false;
+        saveBtn.innerText = "Save";
     }
 
     showConfirmOverlay(message, confirmedFunc) {
