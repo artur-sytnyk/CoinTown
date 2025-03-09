@@ -33,7 +33,7 @@ export class Game {
         this.isRunning = false;
         this.updateCounter = 0;
         this.lastUpdateTime = performance.now();
-        this.screen.setsetSize(gameState.size);
+        this.screen.setSize(gameState.size);
         // Filling nodes
         const nodeAnimation = this.screen.getNodeAnimationFunction();
         gameState.nodes.forEach(node =>

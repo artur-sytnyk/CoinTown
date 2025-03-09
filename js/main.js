@@ -166,9 +166,9 @@ class App {
             saveGamesOverlay.classList.add('show');
         });
 
-        document.getElementById('saveBtn1').addEventListener('click', () => { this.saveSlotAction(1); });
-        document.getElementById('saveBtn2').addEventListener('click', () => { this.saveSlotAction(2); });
-        document.getElementById('saveBtn3').addEventListener('click', () => { this.saveSlotAction(3); });
+        document.getElementById('saveSlotBtn1').addEventListener('click', () => { this.saveSlotAction(1); });
+        document.getElementById('saveSlotBtn2').addEventListener('click', () => { this.saveSlotAction(2); });
+        document.getElementById('saveSlotBtn3').addEventListener('click', () => { this.saveSlotAction(3); });
         document.getElementById('deleteSave1').addEventListener('click', () => { this.deleteGame(1); });
         document.getElementById('deleteSave2').addEventListener('click', () => { this.deleteGame(2); });
         document.getElementById('deleteSave3').addEventListener('click', () => { this.deleteGame(3); });
@@ -199,6 +199,7 @@ class App {
             }
             default: alert.error("Wrong save slot action");
         }
+        document.getElementById('saveGamesOverlay').click();
     }
 
     showConfirmOverlay(message, confirmedFunc) {
@@ -214,8 +215,8 @@ class App {
         noBtn.removeEventListener('click', noBtn._listener);
 
         yesBtn._listener = () => {
-            confirmedFunc();
             overlay.classList.remove('show');
+            confirmedFunc();
         };
         noBtn._listener = () => overlay.classList.remove('show');
 

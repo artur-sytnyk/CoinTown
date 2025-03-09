@@ -8,7 +8,7 @@ export class SaveManager {
             const data = this.load(i);
             const hasData = (!data) ? false : true;
             this.hasSave[i] = (hasData) ? true : false;
-            document.getElementById('saveBtn' + i).innerText = (hasData) ? data.name : 'Empty save';
+            document.getElementById('saveSlotBtn' + i).innerText = (hasData) ? data.name : 'Empty save';
             if (hasData) document.getElementById('deleteSave' + i).classList.add('show');
             else document.getElementById('deleteSave' + i).classList.remove('show');
         }

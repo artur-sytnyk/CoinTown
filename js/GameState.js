@@ -88,7 +88,7 @@ export class GameState {
                 closestNode = node;
             }
         });
-        this.createConnection(closestNode, newNode);
+        if (closestNode) this.createConnection(closestNode, newNode);
     }
 
     createConnection(nodeA, nodeB) {
@@ -107,7 +107,7 @@ export class GameState {
 
     addCoins(amount) {
         this.coins += amount;
-        console.info("coins increased:",amount);
+        console.info("coins increased:", amount);
     }
 
     canAffordResident() {
