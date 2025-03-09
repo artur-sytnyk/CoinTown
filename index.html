@@ -32,8 +32,8 @@
         </div>
     </div>
     <div class="game-display">
-        <span id="town-name">-</span> | 
-        pops: <span id="node-score">1</span> | 
+        <span id="townNameDisplay">-</span> |
+        pops: <span id="node-score">1</span> |
         <span id="coins">0</span> &#x1FA99;
     </div>
     <div id="soundBtn" class="sound-button">
@@ -65,6 +65,17 @@
                 <button id="confirmYes">Yes</button>
                 <button id="confirmNo">No</button>
             </div>
+        </div>
+    </div>
+
+    <div id="saveNameFormOverlay" class="overlay">
+        <div class="save-name-content">
+            Name your town
+            <div class="town-name">
+                <input id="townNameInput" type="text" placeholder="Little Towny"/>
+                <span id="townNameRandomizer">🎲</span>
+            </div>
+            <button id="saveNameBtn">Save</button>
         </div>
     </div>
 

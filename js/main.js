@@ -14,6 +14,7 @@ class App {
         this.sound = false;
         this.savegamesAction = 'load'; // save / load
         this.saveSlot = 1;
+        this.saveName = "";
     }
 
     init() {
@@ -23,33 +24,42 @@ class App {
 
     startGame() {
         this.game.start();
+        document.getElementById('gameStateToggle').innerText = 'Stop';
     }
 
     stopGame() {
         this.game.stop();
+        document.getElementById('gameStateToggle').innerText = 'Start';
     }
 
     saveGame(saveId) {
         if (SaveManager.hasSave[saveId]) {
             this.showConfirmOverlay(
                 "Are you sure to overwrite savefile?",
-                () => { SaveManager.save(saveId, this.game.gameState); }
+                () => { SaveManager.save(saveId, this.saveName, this.game.gameState); }
             );
         } else {
-            // TODO add save name setting
-            SaveManager.save(saveId, this.game.gameState);
+            this.showSaveNameFormOverlay(
+                () => SaveManager.save(saveId, this.saveName, this.game.gameState)
+            );
         }
     }
 
     loadGame(saveId) {
         const data = SaveManager.load(saveId);
-        if (data) this.showConfirmOverlay(
-            "Are you sure to load another savefile? Current proggress will be lost",
-            () => {
-                this.saveSlot = saveId;
-                this.game.loadFromState(data.gameState);
-            }
-        )
+        if (data) {
+            this.showConfirmOverlay(
+                "Are you sure to load another savefile? Current proggress will be lost",
+                () => {
+                    this.saveSlot = saveId;
+                    this.saveName = data.name;
+                    this.stopGame();
+                    this.game.loadFromState(data.gameState);
+                }
+            );
+        } else {
+            alert.error("Cannot load empty save");
+        }
     }
 
     deleteGame(saveId) {
@@ -60,7 +70,8 @@ class App {
     }
 
     restartGame() {
-        this.game.loadFromState(this.game.gameState);
+        this.stopGame();
+        this.game.restart();
     }
 
     setupButtonListeners() {
@@ -80,10 +91,8 @@ class App {
     gameStateToggle() {
         if (this.game.isRunning) {
             this.stopGame();
-            document.getElementById('gameStateToggle').innerText = 'Start';
         } else {
             this.startGame();
-            document.getElementById('gameStateToggle').innerText = 'Stop';
         }
     }
 
@@ -140,6 +149,7 @@ class App {
         const saveGamesContent = saveGamesOverlay.querySelector('.savegames-content');
         const loadGameBtn = document.getElementById('loadGameBtn');
         const saveGameBtn = document.getElementById('saveGameBtn');
+        const saveBtn = document.getElementById('saveNameBtn');
 
         saveGamesOverlay.addEventListener('click', () => {
             saveGamesOverlay.classList.remove('show');
@@ -162,6 +172,19 @@ class App {
         document.getElementById('deleteSave1').addEventListener('click', () => { this.deleteGame(1); });
         document.getElementById('deleteSave2').addEventListener('click', () => { this.deleteGame(2); });
         document.getElementById('deleteSave3').addEventListener('click', () => { this.deleteGame(3); });
+        saveBtn.addEventListener('click', () => { this.setSaveName(saveBtn); });
+
+    }
+
+    setSaveName(saveBtn) {
+        let name = document.getElementById('townNameInput').value;
+        if (name.trim() === '') {
+            alert.error("Name cannot be empty");
+            return;
+        };
+        this.saveName = document.getElementById('townNameInput').value;
+        if (saveBtn._saveFunc) saveBtn._saveFunc();
+        document.getElementById('saveNameFormOverlay').classList.remove('show');
     }
 
     saveSlotAction(saveId) {
@@ -198,6 +221,12 @@ class App {
 
         yesBtn.addEventListener('click', yesBtn._listener);
         noBtn.addEventListener('click', noBtn._listener);
+    }
+
+    showSaveNameFormOverlay(saveFunc) {
+        document.getElementById('townNameInput').value = "";
+        document.getElementById('saveNameBtn')._saveFunc = saveFunc;
+        document.getElementById('saveNameFormOverlay').classList.add('show');
     }
 }
 

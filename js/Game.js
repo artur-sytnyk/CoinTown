@@ -18,16 +18,28 @@ export class Game {
         this.screen.render();
     }
 
+    restart() {
+        this.stop();
+        this.gameState = new GameState(this.gameState.size, this.gameState.mode);
+        this.isRunning = false;
+        this.updateCounter = 0;
+        this.lastUpdateTime = performance.now();
+        this.screen.restart();
+    }
+
     loadFromState(gameState) {
+        this.stop();
         this.gameState.loadFromState(gameState);
         this.isRunning = false;
         this.updateCounter = 0;
         this.lastUpdateTime = performance.now();
         this.screen.setsetSize(gameState.size);
+        // Filling nodes
         const nodeAnimation = this.screen.getNodeAnimationFunction();
         gameState.nodes.forEach(node =>
             this.loadNode(node.type, node.x, node.y, nodeAnimation)
         );
+        this.screen.restart();
     }
 
     start() {

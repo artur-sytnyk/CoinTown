@@ -53,6 +53,11 @@ export class Screen {
         this.size = size;
     }
 
+    restart() {
+        this.animations = [];
+        this.render();
+    }
+
     render() {
         // Clear the canvas
         this.ctx.setTransform(this.zoomLevel, 0, 0, this.zoomLevel, this.offset.x, this.offset.y);

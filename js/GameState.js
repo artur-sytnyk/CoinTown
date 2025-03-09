@@ -16,6 +16,8 @@ export class GameState {
         this.nodes = [new CentralNode(size / 2, size / 2)];
         this.connections = [];
         this.onCoinsChange();
+        this.onNodeCountChange();
+        this.onCostsChange();
     }
 
     loadFromState(gameState) {
@@ -26,6 +28,8 @@ export class GameState {
         this.nodes = [];
         this.connections = [];
         this.onCoinsChange();
+        this.onNodeCountChange();
+        this.onCostsChange();
     }
 
     // ### ### ### ### ### Node functions ### ### ### ### ###

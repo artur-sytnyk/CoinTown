@@ -20,9 +20,9 @@ export class SaveManager {
         return JSON.parse(data);
     }
 
-    static save(slotId, gameState) {
+    static save(slotId, saveName, gameState) {
         const saveObject = {
-            name: "my save name",
+            name: saveName,
             gameState: gameState
         }
         const data = JSON.stringify(saveObject);
