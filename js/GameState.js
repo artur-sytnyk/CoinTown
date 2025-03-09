@@ -107,7 +107,6 @@ export class GameState {
 
     addCoins(amount) {
         this.coins += amount;
-        console.info("coins increased:", amount);
     }
 
     canAffordResident() {
@@ -123,13 +122,9 @@ export class GameState {
     }
 
     findWorkplaceForResident(residentNode) {
-        const workplace = this.nodes.find(node =>
+        return this.nodes.find(node =>
             (node instanceof Commercial || node instanceof Factory) && !node.isFullyStaffed()
         );
-        if (workplace) {
-            residentNode.workplace = workplace;
-            workplace.addWorker(residentNode);
-        }
     }
 
     isNearFactory(residentNode) {
@@ -139,38 +134,19 @@ export class GameState {
         });
     }
 
-    createShoppingRoute(residentNode) {
-        const shoppingRoute = [];
-        let availableShops = this.nodes.filter(
-            shop => shop instanceof Commercial && shop.hasProduct()
+    findShopsForResident(residentNode, range) {
+        return this.nodes.filter(
+            shop => shop instanceof Commercial && shop.canSell() &&
+            nodeDistance(residentNode, shop) <= range
         );
-        if (!availableShops.length) return shoppingRoute;
-
-        // Find first commercial to shop
-        let firstShop = availableShops.find(
-            shop => nodeDistance(residentNode, shop) <= Constants.SHOPPING_RANGE
-        );
-        if (!firstShop) return shoppingRoute;
-        shoppingRoute.push(firstShop);
-        availableShops = removeItem(availableShops, firstShop);
-
-        // Commercials to continue shopping
-        let lastShop = firstShop;
-        for (let i = 0; i < 7; i++) {
-            const nextShop = availableShops.find(
-                shop => nodeDistance(lastShop, shop) <= Constants.SHOPPING_CHAIN_RANGE
-            );
-            if (!nextShop) break;
-            shoppingRoute.push(nextShop);
-            availableShops = removeItem(availableShops, nextShop);
-            lastShop = nextShop;
-        }
-
-        return shoppingRoute;
+    }
+    
+    findFirstShopForResident(residentNode) {
+        return this.findShopsForResident(residentNode, Constants.SHOPPING_RANGE)[0];
     }
 
     findCommercialsForFactory(factoryNode) {
-        factoryNode.productBuyers = this.nodes
+        return this.nodes
             .filter(node =>
                 node instanceof Commercial &&
                 node.canBuyProduct() &&

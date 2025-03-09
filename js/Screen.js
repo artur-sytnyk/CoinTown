@@ -21,7 +21,8 @@ export class Screen {
             work: new Image(),
             product: new Image(),
             shop: new Image(),
-            coin: new Image()
+            coin: new Image(),
+            happy: new Image(),
         }
         this.initIcons();
         this.initCanvas();
@@ -34,6 +35,7 @@ export class Screen {
         this.icons.product.src = "../assets/img/icon-product.png";
         this.icons.shop.src = "../assets/img/icon-shop.png";
         this.icons.coin.src = "../assets/img/coin.png";
+        this.icons.happy.src = "../assets/img/icon-happy.png";
     }
 
     initCanvas() {
@@ -228,7 +230,8 @@ export class Screen {
     addNodeAnimation(node, type, amount) {
         const animImage = {
             wealthGain: this.icons.coin,
-            productGain: this.icons.product
+            productGain: this.icons.product,
+            happinessGain: this.icons.happy
         }[type];
         this.animations.push({
             node: node,
