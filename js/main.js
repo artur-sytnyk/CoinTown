@@ -52,7 +52,7 @@ class App {
                 "Are you sure to load another savefile? Current proggress will be lost",
                 () => {
                     this.saveSlot = saveId;
-                    this.saveName = data.name;
+                    this.setTownName(data.name);
                     this.stopGame();
                     this.game.loadFromState(data.gameState);
                 }
@@ -72,6 +72,11 @@ class App {
     restartGame() {
         this.stopGame();
         this.game.restart();
+    }
+
+    setTownName(name) {
+        this.saveName = name;
+        document.getElementById('townNameDisplay').innerText = name;
     }
 
     setupButtonListeners() {
@@ -172,17 +177,17 @@ class App {
         document.getElementById('deleteSave1').addEventListener('click', () => { this.deleteGame(1); });
         document.getElementById('deleteSave2').addEventListener('click', () => { this.deleteGame(2); });
         document.getElementById('deleteSave3').addEventListener('click', () => { this.deleteGame(3); });
-        saveBtn.addEventListener('click', () => { this.setSaveName(saveBtn); });
+        saveBtn.addEventListener('click', () => { this.setSaveslotName(saveBtn); });
 
     }
 
-    setSaveName(saveBtn) {
+    setSaveslotName(saveBtn) {
         let name = document.getElementById('townNameInput').value;
         if (name.trim() === '') {
             alert.error("Name cannot be empty");
             return;
         };
-        this.saveName = document.getElementById('townNameInput').value;
+        this.setTownName(name);
         if (saveBtn._saveFunc) saveBtn._saveFunc();
         document.getElementById('saveNameFormOverlay').classList.remove('show');
     }
