@@ -104,29 +104,29 @@ button:disabled {
     transform: translateX(-50%);
 }
 
-.green {
+button.green {
     background-color: #5adc5a;
 }
 
-.green:hover {
+button.green:hover {
     background-color: #5adc5a;
     color: white;
 }
 
-.blue {
+button.blue {
     background-color: #5a5adc;
 }
 
-.blue:hover {
+button.blue:hover {
     background-color: #5a5adc;
     color: white;
 }
 
-.orange {
+button.orange {
     background-color: #dc8c3c;
 }
 
-.orange:hover {
+button.orange:hover {
     background-color: #dc8c3c;
     color: white;
 }
@@ -233,16 +233,17 @@ button:disabled {
 .help-text {
     position: absolute;
     top: 3rem;
-    left: 0;
+    left: -6px;
     display: none;
-    padding: 1rem 0rem 1rem 1.5rem;
+    padding: 1rem 0.5rem 1rem 2rem;
     color: #333;
     border-radius: 6px;
-    border-right: 2px solid #555;
+    border: 2px solid #555;
     min-width: 200px;
     width: max-content;
     max-width: 400px;
     font-size: 1.2rem;
+    background-color: #ffe345;
 }
 
 .help-text:hover {
