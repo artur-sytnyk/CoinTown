@@ -1,11 +1,14 @@
-image: node:latest
+stages:
+  - deploy
 
-pages:
+deploy:
+  stage: deploy
   script:
-    - mkdir .public
-    - cp -r * .public
+    - npm install
+    - npm run build 
+    - cp -r ./dist/* public/
   artifacts:
     paths:
-      - .public
+      - public
   only:
     - main
