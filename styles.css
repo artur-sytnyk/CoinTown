@@ -1,19 +1,443 @@
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+textarea:focus, input:focus{
+    outline: none;
 }
 
 #canvas {
-    display: block;
     position: absolute;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+    background-size: 1rem 1rem;
+    background-color: #70e69d;
+}
+
+button {
+    background-color: #ffe345;
+    border: 2px solid #333;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-inline: 0.5rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+button:not(:disabled):hover {
+    background-color: gold;
+    color: #fff;
+}
+
+button:disabled {
+    opacity: 0.5;
+}
+
+.menu-button {
+    background-color: #ffe345;
+    border: 2px solid #333;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    left: -5px;
+    padding: 10px 16px;
+    position: absolute;
+    top: -5px;
+    cursor: pointer;
+}
+
+.menu-button:has(.menu-content:hover),
+.menu-button:hover,
+.menu-button.show {
+    background-color: gold;
+    color: #fff;
+}
+
+.menu-button:hover .menu-content,
+.menu-button.show .menu-content {
+    display: flex;
+    flex-direction: row;
+}
+
+.menu-content {
+    background-color: transparent;
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 3rem;
+    padding-left: 1rem;
+}
+
+.menu-content button {
+    font-size: 1rem;
+    margin-top: 10px;
+    min-width: fit-content;
+    padding: 0.5rem;
+}
+
+.game-display {
+    font-size: 1.3rem;
+    left: 50%;
+    position: absolute;
+    top: 10px;
+    transform: translateX(-50%);
+}
+
+.zoom-controls {
+    bottom: 10px;
+    left: 10px;
+    position: absolute;
+}
+
+.buy-buttons-container {
+    bottom: 10px;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    width: fit-content;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.green {
+    background-color: #5adc5a;
+}
+
+.green:hover {
+    background-color: #5adc5a;
+    color: white;
+}
+
+.blue {
+    background-color: #5a5adc;
+}
+
+.blue:hover {
+    background-color: #5a5adc;
+    color: white;
+}
+
+.orange {
+    background-color: #dc8c3c;
+}
+
+.orange:hover {
+    background-color: #dc8c3c;
+    color: white;
+}
+
+.btn-disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.simulation-control-buttons {
+    bottom: 10px;
+    position: absolute;
+    right: 10px;
+}
+
+/* ### ### ### Alerts ### ### ### */
+
+#alert-wrapper {
+    position: fixed;
+    z-index: 1000;
+    top: 10px;
+    right: 10px;
+    width: fit-content;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.alert {
+    padding: 1rem;
+    border: 2px solid;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1.3rem;
+    transition: opacity 0.3s ease-out;
+}
+
+.alert.info {
+    color: blue;
+    border-color: blue;
+    background-color: rgb(240, 240, 255);
+}
+
+.alert.success {
+    color: green;
+    border-color: green;
+    background-color: rgb(240, 255, 240);
+}
+
+.alert.error {
+    color: red;
+    border-color: red;
+    background-color: rgb(255, 240, 240);
+}
+
+.alert:nth-child(even) {
+    filter: contrast(80%);
+}
+
+.alert:nth-child(odd) {
+    filter: contrast(110%);
+}
+
+.fade-out {
+    opacity: 0;
+}
+
+
+/* ### ### ### Sound ### ### ### */
+
+.sound-button {
+    font-size: 2rem;
+    padding: 0 1rem;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    display: flex;
+    user-select: none;
+}
+
+.sound-button:hover {
+    color: gold;
+}
+
+
+/* ### ### ### Help Text ### ### ### */
+
+.help-button {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    font-size: 1.8rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.help-button:hover,
+.help-button.show {
+    color: gold;
+}
+
+.help-text {
+    position: absolute;
+    top: 3rem;
+    left: 0;
+    display: none;
+    padding: 1rem 0rem 1rem 1.5rem;
+    color: #333;
+    border-radius: 6px;
+    border-right: 2px solid #555;
+    min-width: 200px;
+    width: max-content;
+    max-width: 400px;
+    font-size: 1.2rem;
+}
+
+.help-text:hover {
+    background-color: #ffe34520;
+}
+
+.help-text p {
+    margin: 0.3rem 0;
+}
+.help-text p:first-child {
+    margin-top: 0; 
+}
+
+.help-button:hover .help-text,
+.help-button.show .help-text {
+    display: flex;
+    flex-direction: column;
+    animation: slideInFromLeft 0.3s ease-out forwards;
+}
+
+@keyframes slideInFromLeft {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+
+/* ### ### ### Savegames modal ### ### ### */
+
+.overlay {
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
-                      linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
-    background-size: 1rem 1rem;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
+
+.overlay.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.savegames-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 1rem 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    /* box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2); */
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.save-slot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.savegames-content button {
+    flex-grow: 1;
+    background-color: #ffe345;
+    border: 2px solid #333;
+    padding: 1rem;
+    min-width: 200px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.savegames-content button:first-child {
+    background-color: #ffe760;
+}
+
+.savegames-content button:last-child {
+    background-color: #dac23b;
+}
+
+.savegames-content button:hover {
+    background-color: gold;
+}
+
+.savegames-content span {
+    padding: 0.5rem;
+    padding-bottom: 0.7rem;
+    font-size: 2rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+}
+
+.savegames-content span.show {
+    display: inline;
+}
+
+.savegames-content span:hover {
+    color: red;
+}
+
+
+/* ### ### ### Confirm modal ### ### ### */
+
+.confirm-content {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.confirm-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.confirm-buttons button {
+    color: white;
+    padding: 0.5rem 2rem;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+#confirmYes {
+    background-color: #008000aa;
+}
+
+#confirmYes:hover {
+    background-color: #008000;
+}
+
+#confirmNo {
+    background-color: #ff0000aa;
+}
+
+#confirmNo:hover {
+    background-color: #ff0000;
+}
+
+
+/* ### ### ### Save naming modal ### ### ### */
+
+.save-name-content {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    font-size: 1.5rem;
+}
+
+.save-name-content input {
+    font-size: 1.3rem;
+    border-radius: 4px;
+    border: 2px solid black;
+    margin: 2rem 1rem;  
+    padding: 4px 12px;
+}
+
+.save-name-content span {
+    padding: 10px 8px;
+    font-size: 1.3rem;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: #ffe345;
+}
+
+.save-name-content span:hover {
+    background-color: gold;
+}
+
+.save-name-content button {
+    padding: 1rem 2rem;
+}
+

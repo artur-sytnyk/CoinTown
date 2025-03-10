@@ -1,14 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CoinTown</title>
-    <link rel="icon" type="image/png" href="coin.png" />
+    <link rel="icon" type="image/png" href="./assets/img/coin.png" />
     <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
 <body>
     <canvas id="canvas"></canvas>
-    <script src="js/main.js"></script>
+    <div id="alert-wrapper"></div>
+
+    <div id="menuBtn" class="menu-button">
+        ☰
+        <div class="menu-content">
+            <button id="saveGameBtn">Save Game</button>
+            <button id="loadGameBtn">Load Game</button>
+            <button id="restartBtn">Restart</button>
+        </div>
+    </div>
+    <div id="helpBtn" class="help-button">
+        ?
+        <div class="help-text">
+            <p>Welcome to the game!</p>
+            <p>Try to grow your town as large as possible. Pops is the score!</p>
+            <p>Resident is happy to work and buy stuff each day. Resident is a pop.</p>
+            <p>Factory is happy when worker produces goods which is sold to commercials.</p>
+            <p>Commercial is happy when worker can sell goods to other residents.</p>
+        </div>
+    </div>
+    <div class="game-display">
+        '<span id="townNameDisplay">-</span>' |
+        pops: <span id="node-score">1</span> |
+        <span id="coins">0</span> &#x1FA99;
+    </div>
+    <label id="soundToggle" class="sound-button">
+        <input type="checkbox" id="soundCheckbox" hidden>
+        <span id="soundIcon">🕨</span>
+    </label>    
+
+    <div id="saveGamesOverlay" class="overlay">
+        <div class="savegames-content">
+            Saves
+            <div class="save-slot">
+                <button id="saveSlotBtn1">Empty save</button>
+                <span id="deleteSave1">🗑</span>
+            </div>
+            <div class="save-slot">
+                <button id="saveSlotBtn2">Empty save</button>
+                <span id="deleteSave2">🗑</span>
+            </div>
+            <div class="save-slot">
+                <button id="saveSlotBtn3">Empty save</button>
+                <span id="deleteSave3">🗑</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmOverlay" class="overlay">
+        <div class="confirm-content">
+            <p id="confirmText"></p>
+            <div class="confirm-buttons">
+                <button id="confirmYes">Yes</button>
+                <button id="confirmNo">No</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="saveNameFormOverlay" class="overlay">
+        <div class="save-name-content">
+            Name your town
+            <div class="town-name">
+                <input id="townNameInput" type="text" placeholder="Little Towny"/>
+                <span id="townNameRandomizer">🎲</span>
+            </div>
+            <button id="saveNameBtn">Save</button>
+        </div>
+    </div>
+
+    <div class="zoom-controls">
+        Zoom: <span id="zoomLevel">1</span>
+        <button id="zoomInBtn">+</button>
+        <button id="zoomOutBtn">-</button>
+    </div>
+    <div class="buy-buttons-container">
+        <button id="buyResidentBtn" class="green">
+            Buy Resident: <span id="rCost">0</span> &#x1FA99;
+        </button>
+        <button id="buyCommercialBtn" class="blue">
+            Buy Commercial: <span id="cCost">0</span> &#x1FA99;
+        </button>
+        <button id="buyFactoryBtn" class="orange">
+            Buy Factory: <span id="fCost">0</span> &#x1FA99;
+        </button>
+    </div>
+    <div class="simulation-control-buttons">
+        <button id="gameStateToggle">Start</button>
+        <button id="simulationSpeedBtn">Speed <span id="speed">x1</span></button>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
 </body>
+
 </html>
