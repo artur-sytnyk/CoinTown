@@ -3,9 +3,8 @@ stages:
 
 deploy:
   stage: deploy
+  image: node:16-alpine
   script:
-    - npm install
-    - npm run build 
     - cp -r ./dist/* public/
   artifacts:
     paths:
