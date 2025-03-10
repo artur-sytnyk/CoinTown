@@ -7,6 +7,7 @@
     <title>CoinTown</title>
     <link rel="icon" type="image/png" href="./assets/img/coin.png" />
     <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -36,9 +37,10 @@
         pops: <span id="node-score">1</span> |
         <span id="coins">0</span> &#x1FA99;
     </div>
-    <div id="soundBtn" class="sound-button">
-        🕨
-    </div>
+    <label id="soundToggle" class="sound-button">
+        <input type="checkbox" id="soundCheckbox" hidden>
+        <span id="soundIcon">🕨</span>
+    </label>    
 
     <div id="saveGamesOverlay" class="overlay">
         <div class="savegames-content">

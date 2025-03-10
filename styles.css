@@ -30,13 +30,13 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+button:not(:disabled):hover {
     background-color: gold;
     color: #fff;
 }
 
 button:disabled {
-    opacity: 0,5;
+    opacity: 0.5;
 }
 
 .menu-button {
@@ -51,16 +51,14 @@ button:disabled {
     cursor: pointer;
 }
 
-.menu-button:hover {
+.menu-button:has(.menu-content:hover),
+.menu-button:hover,
+.menu-button.show {
     background-color: gold;
     color: #fff;
 }
 
-.menu-button:hover .menu-content {
-    display: flex;
-    flex-direction: row;
-}
-
+.menu-button:hover .menu-content,
 .menu-button.show .menu-content {
     display: flex;
     flex-direction: row;
@@ -185,22 +183,17 @@ button:disabled {
     background-color: rgb(255, 240, 240);
 }
 
+.alert:nth-child(even) {
+    filter: contrast(80%);
+}
+
+.alert:nth-child(odd) {
+    filter: contrast(110%);
+}
+
 .fade-out {
     opacity: 0;
 }
-
-
-/* ### ### ### Icons ### ### ### */
-
-/* .range-icon {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    top: -100px;
-    left: -100px;
-} */
 
 
 /* ### ### ### Sound ### ### ### */
@@ -213,6 +206,7 @@ button:disabled {
     right: 0;
     cursor: pointer;
     display: flex;
+    user-select: none;
 }
 
 .sound-button:hover {
@@ -231,16 +225,17 @@ button:disabled {
     cursor: pointer;
 }
 
-.help-button:hover {
+.help-button:hover,
+.help-button.show {
     color: gold;
 }
 
 .help-text {
     position: absolute;
-    top: 30px;
+    top: 3rem;
     left: 0;
     display: none;
-    padding: 1rem;
+    padding: 1rem 0rem 1rem 1.5rem;
     color: #333;
     border-radius: 6px;
     border-right: 2px solid #555;
@@ -248,20 +243,36 @@ button:disabled {
     width: max-content;
     max-width: 400px;
     font-size: 1.2rem;
-    /* background-color: #fff; */
+}
+
+.help-text:hover {
+    background-color: #ffe34520;
 }
 
 .help-text p {
-    margin: 0;
-    margin-top: 0.5rem;
+    margin: 0.3rem 0;
+}
+.help-text p:first-child {
+    margin-top: 0; 
 }
 
 .help-button:hover .help-text,
 .help-button.show .help-text {
     display: flex;
     flex-direction: column;
+    animation: slideInFromLeft 0.3s ease-out forwards;
 }
 
+@keyframes slideInFromLeft {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
 
 
 /* ### ### ### Savegames modal ### ### ### */
@@ -321,6 +332,14 @@ button:disabled {
     font-size: 1rem;
     cursor: pointer;
     border-radius: 4px;
+}
+
+.savegames-content button:first-child {
+    background-color: #ffe760;
+}
+
+.savegames-content button:last-child {
+    background-color: #dac23b;
 }
 
 .savegames-content button:hover {

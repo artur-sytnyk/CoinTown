@@ -179,7 +179,8 @@ export class GameState {
     }
 
     onNodeCountChange() {
-        document.getElementById('node-score').innerText = this.nodes.length;
+        let popsCount = this.nodes.filter(node => node instanceof Resident).length;
+        document.getElementById('node-score').innerText = popsCount;
     }
 
     isWithinRange(nodeA, nodeB, range) {
