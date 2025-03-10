@@ -5,6 +5,7 @@ deploy:
   stage: deploy
   image: node:16-alpine
   script:
+    - mkdir -p public
     - cp -r ./* public/
   artifacts:
     paths:
