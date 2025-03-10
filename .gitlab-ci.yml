@@ -12,3 +12,14 @@ deploy:
       - public
   only:
     - main
+
+pages:
+  stage: deploy
+  script:
+    - mkdir -p public
+    - cp -r index.html styles.css js/ assets/ public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
