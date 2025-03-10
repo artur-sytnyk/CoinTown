@@ -20,27 +20,27 @@ Cílem projektu je vytvořit hru, která umožní na platně stavit věci podle 
 
 ## Popis funkčnosti
 
-Budovy:
-•	Jsou dostupné, pokud hráč má na ně dostatek minci
-•	Dají se umisťovat v rámci města, při rozmístění zobrazuji zóny vlivu – interakce mezi budovami
-•	Při úspěšném rozmístěni budovy se cena na daný typ zvyšuje
-Canvas:
-•	Dá se přetahovat pomoci myší
-•	Dá se měnit (viditelná) velikost jak myší, tak tlačítky
-•	Zobrazuje zónu města
-•	Zobrazí animaci budov při zisku minci nebo produktu
-Start / speed:
-•	Start/Stop tlačítko startuje nebo pozastaví běh simulace
-•	Reaguje na “Space” neboli mezerník
-•	Speed přepíná mezi rychlostmi 1, 2 a 4.
-Otazníček (tlačítko)
-•	Zobrazí nápovědu ke hře
-•	Zobrazení na najeti i na klik, pak klikem schovat
-Značka vypnutého zvuku
-•	Ovládací prvek na mute/unmute hudby v pozadí
-•	(defaultně je na hlasitosti 0.2 ať nezabiji uši)
-Burger button / Menu
-•	Uložit hru, kdy se pokaždé musí vybrat do kterého slotu nyní uložit
-•	Při uložení do prázdného slotu je hráč vyzván k pojmenování města. U dané výzvy je tlačítko náhodného názvu pomoci API
-•	Načíst hru – povolí vybrat slot, ze kterého má načíst uložený stav hry. Prázdny slot nic nenačte – vypíše hlášku.
-•	Restart hry – neřeší aktuální hru, vytvoří novou čistou verzí se stejným nastavením
+**Budovy:**
+- Jsou dostupné, pokud hráč má na ně dostatek minci
+- Dají se umisťovat v rámci města, při rozmístění zobrazuji zóny vlivu – interakce mezi budovami
+- Při úspěšném rozmístěni budovy se cena na daný typ zvyšuje
+**Canvas:**
+- Dá se přetahovat pomoci myší
+- Dá se měnit (viditelná) velikost jak myší, tak tlačítky
+- Zobrazuje zónu města
+- Zobrazí animaci budov při zisku minci nebo produktu
+**Start / speed:**
+- Start/Stop tlačítko startuje nebo pozastaví běh simulace
+- Reaguje na “Space” neboli mezerník
+- Speed přepíná mezi rychlostmi 1, 2 a 4.
+**Otazníček (tlačítko):**
+- Zobrazí nápovědu ke hře
+- Zobrazení na najeti i na klik, pak klikem schovat
+**Značka vypnutého zvuku:**
+- Ovládací prvek na mute/unmute hudby v pozadí
+- (defaultně je na hlasitosti 0.2 ať nezabiji uši)
+**Burger button / Menu:**
+- Uložit hru, kdy se pokaždé musí vybrat do kterého slotu nyní uložit
+- Při uložení do prázdného slotu je hráč vyzván k pojmenování města. U dané výzvy je tlačítko náhodného názvu pomoci API
+- Načíst hru – povolí vybrat slot, ze kterého má načíst uložený stav hry. Prázdny slot nic nenačte – vypíše hlášku.
+- Restart hry – neřeší aktuální hru, vytvoří novou čistou verzí se stejným nastavením
