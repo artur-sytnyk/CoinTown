@@ -8,7 +8,8 @@ html {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-textarea:focus, input:focus{
+textarea:focus,
+input:focus {
     outline: none;
 }
 
@@ -61,7 +62,6 @@ button:disabled {
 .menu-button:hover .menu-content,
 .menu-button.show .menu-content {
     display: flex;
-    flex-direction: row;
 }
 
 .menu-content {
@@ -71,6 +71,7 @@ button:disabled {
     top: 0;
     left: 3rem;
     padding-left: 1rem;
+    flex-direction: row;
 }
 
 .menu-content button {
@@ -92,6 +93,19 @@ button:disabled {
     bottom: 10px;
     left: 10px;
     position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.zoom-controls div {
+    display: flex;
+    gap: 5px;
+}
+
+.zoom-controls button {
+    margin-inline: 4px;
+    min-width: 48px;
 }
 
 .buy-buttons-container {
@@ -104,29 +118,35 @@ button:disabled {
     transform: translateX(-50%);
 }
 
-.green {
+.buy-buttons-container button {
+    min-width: fit-content;
+    font-size: 1.1rem;
+    border-width: 3px;
+}
+
+button.green {
     background-color: #5adc5a;
 }
 
-.green:hover {
+button.green:hover {
     background-color: #5adc5a;
     color: white;
 }
 
-.blue {
+button.blue {
     background-color: #5a5adc;
 }
 
-.blue:hover {
+button.blue:hover {
     background-color: #5a5adc;
     color: white;
 }
 
-.orange {
+button.orange {
     background-color: #dc8c3c;
 }
 
-.orange:hover {
+button.orange:hover {
     background-color: #dc8c3c;
     color: white;
 }
@@ -138,9 +158,15 @@ button:disabled {
 
 .simulation-control-buttons {
     bottom: 10px;
-    position: absolute;
     right: 10px;
+    position: absolute;
+    display: flex;
 }
+
+.simulation-control-buttons button {
+    min-width: 100px;
+}
+
 
 /* ### ### ### Alerts ### ### ### */
 
@@ -233,27 +259,29 @@ button:disabled {
 .help-text {
     position: absolute;
     top: 3rem;
-    left: 0;
+    left: -10px;
     display: none;
-    padding: 1rem 0rem 1rem 1.5rem;
+    padding: 1rem 0.5rem 1rem 2rem;
     color: #333;
-    border-radius: 6px;
-    border-right: 2px solid #555;
+    border-radius: 10px;
+    border: 3px solid #555;
     min-width: 200px;
     width: max-content;
     max-width: 400px;
     font-size: 1.2rem;
+    background-color: #ffe345;
 }
 
 .help-text:hover {
-    background-color: #ffe34520;
+    background-color: #ffe345aa;
 }
 
 .help-text p {
     margin: 0.3rem 0;
 }
+
 .help-text p:first-child {
-    margin-top: 0; 
+    margin-top: 0;
 }
 
 .help-button:hover .help-text,
@@ -268,6 +296,7 @@ button:disabled {
         transform: translateX(-100%);
         opacity: 0;
     }
+
     100% {
         transform: translateX(0);
         opacity: 1;
@@ -283,7 +312,8 @@ button:disabled {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    background: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -421,7 +451,7 @@ button:disabled {
     font-size: 1.3rem;
     border-radius: 4px;
     border: 2px solid black;
-    margin: 2rem 1rem;  
+    margin: 2rem 1rem;
     padding: 4px 12px;
 }
 
@@ -441,3 +471,147 @@ button:disabled {
     padding: 1rem 2rem;
 }
 
+
+
+/* ### ### ### ### ### Resonsiveness ### ### ### ### ### */
+
+@media screen and (max-width: 1200px) {
+    button {
+        font-size: 0.9rem;
+        margin-inline: 0.2rem;
+        padding: 0.5rem 0.8rem;
+    }
+
+    .sound-button {
+        font-size: 1.8rem;
+    }
+
+    .help-button {
+        font-size: 1.6rem;
+    }
+
+    .help-text {
+        font-size: 1rem;
+    }
+
+    .menu-button {
+        font-size: 1.3rem;
+    }
+    
+    .menu-content button {
+        margin-inline: 0.5rem;
+    }
+
+    .zoom-controls,
+    .menu-button button {
+        font-size: 1rem;
+    }
+
+    .zoom-controls button {
+        max-width: 40px;
+    }
+
+    .buy-buttons-container button {
+        font-size: 1rem;
+        margin-inline: 0.5rem;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .game-display {
+        font-size: 1.2rem;
+    }
+
+    .menu-content {
+        flex-direction: column;
+    }
+
+    .menu-content button {
+        min-width: 120px;
+    }
+
+    .help-button {
+        font-size: 1.5rem;
+    }
+
+    .buy-buttons-container {
+        bottom: 64px;
+    }
+
+    .buy-buttons-container button {
+        margin-inline: 1rem;
+        padding: 0.8rem 1.6rem;
+    }
+}
+
+
+@media screen and (max-width: 768px) {
+    .buy-buttons-container {
+        bottom: 60px;
+    }
+
+    .buy-buttons-container button {
+        font-size: 1rem;
+        padding: 0.5rem 1.2rem;
+        margin-inline: 0.8rem;
+    }
+
+    .menu-content {
+        padding-left: 0.5rem;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .game-display {
+        font-size: 1rem;
+    }
+    
+    .menu-content {
+        top: 50px;
+        left: -3px;
+    }
+
+    .help-button {
+        left: auto;
+        right: 0;
+    }
+
+    .help-text {
+        left: auto;
+        right: 10px;
+        max-width: 300px;
+        padding: 0.5rem;
+        padding-left: 1rem;
+    }
+
+    .help-button:hover .help-text,
+    .help-button.show .help-text {
+        animation: slideInFromRight 0.3s ease-out forwards;
+    }
+    
+    @keyframes slideInFromRight {
+        0% {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    
+        100% {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    .buy-buttons-container {
+        bottom: 56px;
+    }
+
+    .buy-buttons-container button {
+        font-size: 0.9rem;
+        padding: 6px 10px;
+        margin-inline: 10px;
+    }
+
+    button {
+        font-size: 0.8rem;
+    }
+}

@@ -3,90 +3,111 @@ import { GameState } from "./GameState.js";
 import { Resident, Commercial, Factory, CentralNode } from "./GameNode.js";
 
 export class Game {
+    #gameState;
+    #screen;
+    #isRunning;
+    #updateCounter;
+    #updateInterval;
+    #speedMultiplier;
+    #lastUpdateTime;
+
     constructor(size, mode) {
-        this.gameState = new GameState(size, mode);
-        this.screen = null; // for screen DI
-        this.isRunning = false;
-        this.updateCounter = 0;
-        this.updateInterval = 250; // 250ms base update
-        this.speedMultiplier = 1;
-        this.lastUpdateTime = performance.now();
+        this.#gameState = new GameState(size, mode);
+        this.#screen = null; // for screen DI
+        this.#isRunning = false;
+        this.#updateCounter = 0;
+        this.#updateInterval = 250; // 250ms base update
+        this.#speedMultiplier = 1;
+        this.#lastUpdateTime = performance.now();
     }
 
     setScreen(screen) {
-        this.screen = screen;
-        this.screen.render();
+        this.#screen = screen;
+        this.#screen.render();
+    }
+
+    get gameState() {
+        return this.#gameState;
+    }
+
+    get isRunning() {
+        return this.#isRunning;
+    }
+
+    get speedMultiplier() {
+        return this.#speedMultiplier;
     }
 
     restart() {
         this.stop();
-        this.gameState = new GameState(this.gameState.size, this.gameState.mode);
-        this.isRunning = false;
-        this.updateCounter = 0;
-        this.lastUpdateTime = performance.now();
-        this.screen.restart();
+        this.#gameState = new GameState(this.#gameState.size, this.#gameState.mode);
+        this.#isRunning = false;
+        this.#updateCounter = 0;
+        this.#lastUpdateTime = performance.now();
+        this.#screen.restart();
     }
 
     loadFromState(gameState) {
         this.stop();
-        this.gameState.loadFromState(gameState);
-        this.isRunning = false;
-        this.updateCounter = 0;
-        this.lastUpdateTime = performance.now();
-        this.screen.setSize(gameState.size);
+        this.#gameState.loadFromState(gameState);
+        this.#isRunning = false;
+        this.#updateCounter = 0;
+        this.#lastUpdateTime = performance.now();
+        this.#screen.setSize(gameState.size);
         // Filling nodes
-        const nodeAnimation = this.screen.getNodeAnimationFunction();
+        const nodeAnimation = this.#screen.getNodeAnimationFunction();
         gameState.nodes.forEach(node =>
             this.loadNode(node.type, node.x, node.y, nodeAnimation)
         );
-        this.screen.restart();
+        this.#screen.restart();
     }
 
     start() {
-        if (this.isRunning) return;
-        this.isRunning = true;
-        this.lastUpdateTime = performance.now();
+        if (this.#isRunning) return;
+        this.#isRunning = true;
+        this.#lastUpdateTime = performance.now();
         requestAnimationFrame(this.gameLoop.bind(this));
     }
 
     stop() {
-        this.isRunning = false;
+        this.#isRunning = false;
+        this.#screen.restart();
     }
 
     gameLoop(timestamp) {
-        if (!this.isRunning) return;
+        if (!this.#isRunning) return;
 
         // Calculate time difference (delta time)
-        const deltaTime = timestamp - this.lastUpdateTime;
+        const deltaTime = timestamp - this.#lastUpdateTime;
 
         // Check if it's time to update game logic
-        if (deltaTime >= this.updateInterval / this.speedMultiplier) {
+        if (deltaTime >= this.#updateInterval / this.#speedMultiplier) {
             this.update();
-            this.lastUpdateTime = timestamp;
+            this.#lastUpdateTime = timestamp;
         }
 
         // Always render at max FPS for smooth visuals
-        if (this.screen) this.screen.render();
+        if (this.#screen) this.#screen.render();
 
         requestAnimationFrame(this.gameLoop.bind(this));
     }
 
     update() {
-        this.updateCounter++;
+        this.#updateCounter++;
 
-        this.gameState.nodes.forEach((node) => {
-            node.update(this.updateCounter, this.gameState);
+        this.#gameState.nodes.forEach((node) => {
+            node.update(this.#updateCounter, this.#gameState);
         });
 
-        if (this.updateCounter === 24) {
-            this.updateCounter = 0;
-            this.gameState.dailyUpdate();
+        if (this.#updateCounter === 24) {
+            this.#updateCounter = 0;
+            this.#gameState.dailyUpdate();
         }
-        this.gameState.onCoinsChange();
+        this.#gameState.onCoinsChange();
     }
 
     setSpeedMultiplier(newSpeed) {
-        this.speedMultiplier = newSpeed;
+        this.#speedMultiplier = newSpeed;
     }
 
 
@@ -103,35 +124,35 @@ export class Game {
 
     isAbleToSpawn(x, y) {
         // Cannot spawn on top of other nodes, inverse search
-        const onTopOfNode = this.gameState.nodes.some(node => {
+        const onTopOfNode = this.#gameState.nodes.some(node => {
             return Math.hypot(node.x - x, node.y - y) < Constants.NODE_SIZE * 2;
         });
         // Must be in spawning range near other nodes which can connect
-        const inSpawningRange = this.gameState.nodes.some(node => {
+        const inSpawningRange = this.#gameState.nodes.some(node => {
             return node.isConnectable() &&
                 Math.hypot(node.x - x, node.y - y) <= Constants.NODE_RANGE;
         });
         // Must be in town area
         const inTownArea = x - Constants.NODE_SIZE > 0 &&
-            x + Constants.NODE_SIZE < this.gameState.size &&
+            x + Constants.NODE_SIZE < this.#gameState.size &&
             y - Constants.NODE_SIZE > 0 &&
-            y + Constants.NODE_SIZE < this.gameState.size;
+            y + Constants.NODE_SIZE < this.#gameState.size;
         return !onTopOfNode && inSpawningRange && inTownArea;
     }
 
     createNode(nodeType, x, y, nodeAnimationFunc) {
         switch (nodeType) {
             case 'resident':
-                this.gameState.spawnNode(new Resident(x, y, nodeAnimationFunc));
+                this.#gameState.spawnNode(new Resident(x, y, nodeAnimationFunc));
                 break;
             case 'commercial':
-                this.gameState.spawnNode(new Commercial(x, y, nodeAnimationFunc));
+                this.#gameState.spawnNode(new Commercial(x, y, nodeAnimationFunc));
                 break;
             case 'factory':
-                this.gameState.spawnNode(new Factory(x, y, nodeAnimationFunc));
+                this.#gameState.spawnNode(new Factory(x, y, nodeAnimationFunc));
                 break;
             case 'central':
-                this.gameState.spawnNode(new CentralNode(x, y));
+                this.#gameState.spawnNode(new CentralNode(x, y));
                 break;
             default:
                 alert.error('Unknown node type');
@@ -141,16 +162,16 @@ export class Game {
     loadNode(nodeType, x, y, nodeAnimationFunc) {
         switch (nodeType) {
             case 'resident':
-                this.gameState.loadNode(new Resident(x, y, nodeAnimationFunc));
+                this.#gameState.loadNode(new Resident(x, y, nodeAnimationFunc));
                 break;
             case 'commercial':
-                this.gameState.loadNode(new Commercial(x, y, nodeAnimationFunc));
+                this.#gameState.loadNode(new Commercial(x, y, nodeAnimationFunc));
                 break;
             case 'factory':
-                this.gameState.loadNode(new Factory(x, y, nodeAnimationFunc));
+                this.#gameState.loadNode(new Factory(x, y, nodeAnimationFunc));
                 break;
             case 'central':
-                this.gameState.loadNode(new CentralNode(x, y));
+                this.#gameState.loadNode(new CentralNode(x, y));
                 break;
             default:
                 alert.error('Unknown node type');
