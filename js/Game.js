@@ -18,6 +18,10 @@ export class Game {
         this.screen.render();
     }
 
+    getGameState() {
+        return this.gameState;
+    }
+
     restart() {
         this.stop();
         this.gameState = new GameState(this.gameState.size, this.gameState.mode);

@@ -1,12 +1,10 @@
 
-import { App } from './App.js';
+import { ControllerManager } from './ControllerManager.js';
 import { Alert } from './Alert.js';
 import './utils.js';
 
 window.onload = () => {
-    const alert = new Alert();
-    window.alert = alert;
-    const app = new App();
-    window.app = app; // TODO - for tests
+    window.alert = new Alert();
+    const app = new ControllerManager();
     app.init();
 }
