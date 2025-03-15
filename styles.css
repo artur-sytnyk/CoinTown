@@ -518,6 +518,10 @@ button.orange:hover {
 }
 
 @media screen and (max-width: 992px) {
+    .game-display {
+        font-size: 1.2rem;
+    }
+
     .menu-content {
         flex-direction: column;
     }
@@ -558,6 +562,10 @@ button.orange:hover {
 }
 
 @media screen and (max-width: 576px) {
+    .game-display {
+        font-size: 1rem;
+    }
+    
     .menu-content {
         top: 50px;
         left: -3px;

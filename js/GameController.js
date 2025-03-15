@@ -7,20 +7,19 @@ export class GameController {
         this.screen = new Screen(this.game);
         this.game.setScreen(this.screen);
         this.bgMusic = new Audio("../assets/audio/bg-sound.wav");
+        this.bgMusic.loop = true;
+        this.bgMusic.volume = 0.2;
+        this.bgMusic.preload = 'auto';
     }
 
     init() {
-        this.#musicInit();
+
     }
 
     // Music
-    #musicInit() {
-        this.bgMusic.loop = true;
-        this.bgMusic.volume = 0.2;
-    }
 
     startMusic() {
-        this.bgMusic.play();
+        if (this.bgMusic.paused) this.bgMusic.play();
     }
 
     stopMusic() {
@@ -59,6 +58,6 @@ export class GameController {
     }
 
     getGameState() {
-        return this.game.getGameState();
+        return this.game.gameState;
     }
 }

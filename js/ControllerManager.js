@@ -18,6 +18,7 @@ export class ControllerManager {
 
 
     // Music
+
     startMusic() {
         this.game.startMusic();
     }
@@ -27,6 +28,7 @@ export class ControllerManager {
     }
 
     // Game
+
     toggleGameLoop() {
         return this.game.toggleGameLoop();
     }
@@ -48,11 +50,13 @@ export class ControllerManager {
     }
 
     // Nodes
+
     placeGameNode(type) {
         this.game.placeNode(type)
     }
 
     // Saves
+
     setSaveAction(action) {
         this.save.setAction(action);
     }
@@ -70,6 +74,7 @@ export class ControllerManager {
     }
 
     // UI
+    
     showSaveConfirmOverlay(message, confirmFunction) {
         this.ui.showSaveConfirmOverlay(message, confirmFunction);
     }

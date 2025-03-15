@@ -296,8 +296,7 @@ export class Screen {
     }
 
     updateZoomDisplay() {
-        const zoomLevelEl = document.getElementById('zoomLevel');
-        zoomLevelEl.innerText = this.zoomLevel.toFixed(2);
+        $('#zoomLevel').text(this.zoomLevel.toFixed(2));
     }
 
     placeNode(type) {
@@ -368,10 +367,10 @@ export class Screen {
 
     addZoomEventListeners() {
         this.canvas.addEventListener('wheel', this.onMouseZoom.bind(this));
-        document.getElementById('zoomInBtn').addEventListener('click', () => {
+        $('#zoomInBtn').on('click', () => {
             this.zoom(Constants.ZOOM_BTN_FACTOR, window.innerWidth / 2, window.innerHeight / 2);
         });
-        document.getElementById('zoomOutBtn').addEventListener('click', () => {
+        $('#zoomOutBtn').on('click', () => {
             this.zoom(-Constants.ZOOM_BTN_FACTOR, window.innerWidth / 2, window.innerHeight / 2);
         });
     }

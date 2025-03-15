@@ -29,12 +29,13 @@ export class SaveController {
     }
 
     #setSlotId(id) {
-        if (id < 0 || id > 4) return;
+        if (id < 1 || id > 3) return;
         this.#saveSlotId = id;
     }
 
     #setName(name) {
         this.#saveName = name;
+        $('#townNameDisplay').text(name);
     }
 
     setAction(action) {
