@@ -40,10 +40,8 @@ export class SaveManager {
         const reader = new FileReader();
         reader.onload = function () {
             try {
-                const data = JSON.parse(reader.result);
-                SaveManager.save(slotId, data.name, data.gameState);
+                localStorage.setItem('savegame' + slotId, reader.result);
             } catch (e) {
-                console.log(e)
                 alert.error('Invalid save file!');
             }
         };
