@@ -16,6 +16,8 @@ Cílem projektu je vytvořit hru, která umožní na platně stavit věci podle 
 - **Herní logika uzlů:** Implementována logika pro umisťování a interakce mezi uzly.
 - **Ukládání herního stavu:** Přidáno ukládání herního stavu pro pokračování hry.
 - **Vylepšení:** Přidání menších funkcí, jako tlačítka pro hudbu a nápovědu.
+- **Refactor:** změny kódu, dekompozice, zapouzdření
+- **Pokročilé funkce:** Vylepšení uložení stavu her, jejich import a export, také reagování na offline stav uživatele
 
 ## Popis funkčnosti
 
@@ -54,3 +56,15 @@ Cílem projektu je vytvořit hru, která umožní na platně stavit věci podle 
 - Při uložení do prázdného slotu je hráč vyzván k pojmenování města. U dané výzvy je tlačítko náhodného názvu pomoci API
 - Načíst hru – povolí vybrat slot, ze kterého má načíst uložený stav hry. Prázdny slot nic nenačte – vypíše hlášku.
 - Restart hry – neřeší aktuální hru, vytvoří novou čistou verzí se stejným nastavením
+
+**offline stav:**
+
+- Hra naposlouchá zda uživatel je online
+- Zobrazí identifikaci offline stavu pomocí červeného kolečka
+- Nepovolí možnost náhodné generace názvu města při ukládání nové hry
+
+**Import a export:**
+
+- V pohledu save slotu hry jsou tlačítka pro export či import json souborů
+- Export hned vytvoří a stáhne json soubor uživateli
+- Import povolí uživateli vybrat soubor a nahrát ho do save slotu

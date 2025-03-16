@@ -35,19 +35,36 @@ export class SaveManager {
     }
 
     static importSave(slotId, file) {
-        const reader = new FileReader();
+        const MAX_FILE_SIZE_MB = 1;
+        const ALLOWED_TYPES = ['application/json', 'text/plain'];
+
         return new Promise((resolve, reject) => {
+            if (!ALLOWED_TYPES.includes(file.type)) {
+                return reject('Invalid file type! Please upload a JSON file.');
+            }
+            if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+                return reject(`File size exceeds ${MAX_FILE_SIZE_MB}MB limit!`);
+            }
+
+            const reader = new FileReader();
             reader.onload = () => {
                 try {
-                    const dataString = reader.result
+                    const dataString = reader.result;
+                    const parsedData = JSON.parse(dataString);
+                    if (!parsedData.name || !parsedData.gameState) {
+                        return reject('Invalid save file structure!');
+                    }
+                    
                     localStorage.setItem('savegame' + slotId, dataString);
-                    resolve(JSON.parse(dataString));
+                    resolve(parsedData);
                 } catch (e) {
-                    reject('Invalid save file');
+                    reject('Invalid save file! Unable to parse JSON.');
                 }
             };
-            reader.onerror = () => reject("Error reading file");
+
+            reader.onerror = () => reject('Error reading file');
             reader.readAsText(file);
         });
     }
+
 }
