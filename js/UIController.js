@@ -7,6 +7,7 @@ export class UIController {
 
     init() {
         this.#setupUIListeners();
+        this.#updateOnlineStatus();
     }
 
     showSaveConfirmOverlay(message, confirmFunction) {
@@ -27,6 +28,7 @@ export class UIController {
 
     showSaveNameFormOverlay() {
         $('#townNameInput').val("");
+        $('#townNameRandomizer').prop('disabled', !navigator.onLine);
         $('#saveNameFormOverlay').addClass('show');
         setTimeout(() => $('#townNameInput').focus(), 10);
     }
@@ -42,6 +44,7 @@ export class UIController {
         this.#setupBuyButtons();
         this.#setupSavesListeners();
         this.#setupSaveNameListeners();
+        this.#setupOnlineListeners();
     }
 
     #setupMusicToggle() {
@@ -163,5 +166,19 @@ export class UIController {
 
         saveBtn.prop('disabled', false);
         saveBtn.text("Save");
+    }
+
+    #setupOnlineListeners() {
+        window.addEventListener('online', () => this.#updateOnlineStatus());
+        window.addEventListener('offline', () => this.#updateOnlineStatus());
+    }
+
+    #updateOnlineStatus() {
+        const isOnline = navigator.onLine;
+        $('#offlineIndicator')
+            .css('display', isOnline ? 'none' : 'block');
+        $('#townNameRandomizer')
+            .css('pointer-events', isOnline ? 'auto' : 'none')
+            .toggleClass('disabled', !isOnline);
     }
 }
