@@ -121,7 +121,8 @@ export class SaveController {
     }
 
     importSave(slotId, file) {
-        if (SaveManager.importSave(slotId, file)) this.#loadGame(slotId);
+        this.#setSlotId(slotId);
+        if (SaveManager.importSave(slotId, file)) this.#loadGame();
         else alert.error('Empty upload!');
     }
 }

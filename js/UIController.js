@@ -117,12 +117,12 @@ export class UIController {
 
         $('#loadGameBtn').click(() => {
             this.manager.setSaveAction('load');
-            $('#saveGamesOverlay').addClass('show');
+            this.#showSaveSlotsOverlay();
         });
 
         $('#saveGameBtn').click(() => {
             this.manager.setSaveAction('save');
-            $('#saveGamesOverlay').addClass('show');
+            this.#showSaveSlotsOverlay();
         });
 
         ['1', '2', '3'].forEach(slotId => {
@@ -134,6 +134,11 @@ export class UIController {
             });
             $(`#deleteSave${slotId}`).click(() => this.#deleteGame(slotId));
         });
+    }
+
+    #showSaveSlotsOverlay() {
+        this.manager.updateSaveSlots();
+        $('#saveGamesOverlay').addClass('show');
     }
 
     #deleteGame(slotId) {
