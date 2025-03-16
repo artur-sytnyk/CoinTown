@@ -21,10 +21,10 @@ export class SaveController {
     updateSaveSlots() {
         for (let i = 1; i <= 3; i++) {
             const data = SaveManager.load(i);
-            const hasData = (!data) ? false : true;
-
-            document.getElementById('saveSlotBtn' + i).innerText = (hasData) ? data.name : 'Empty save';
-            document.getElementById('deleteSave' + i).classList.toggle('show', hasData);
+            const hasData = data !== null;
+            $('#saveSlotBtn' + i).text(hasData ? data.name : 'Empty save');
+            $('#deleteSave' + i).toggleClass('show', hasData);
+            $('#exportSave' + i).toggleClass('hide', !hasData);
         }
     }
 
@@ -49,16 +49,22 @@ export class SaveController {
     #saveGame() {
         SaveManager.save(this.#saveSlotId, this.#saveName, this.manager.getGameState());
         this.updateSaveSlots();
+        this.manager.hideSaveSlotOverlay();
     }
 
     #loadGame() {
         const data = SaveManager.load(this.#saveSlotId);
-        if(!data) {
+        if (!data) {
             alert.error("Cannot load empty save");
             return;
         }
+        if (!data.name || !data.gameState) {
+            alert.error("Save is corrupted");
+            return;
+        }
         this.#setName(data.name);
-        this.manager.loadGameRomSave(data.gameState);
+        this.manager.loadGameFromSave(data.gameState);
+        this.manager.hideSaveSlotOverlay();
     }
 
     saveWithName(name) {
@@ -89,7 +95,7 @@ export class SaveController {
     }
 
     #saveGameAction() {
-        if (this.hasSave(this.#saveSlotId)) {
+        if (this.hasSave(this.#saveSlotId) && this.#saveName) {
             this.manager.showSaveConfirmOverlay(
                 "Are you sure to overwrite savefile?",
                 () => this.#doAction()
@@ -110,4 +116,12 @@ export class SaveController {
         }
     }
 
+    exportSave(slotId) {
+        SaveManager.exportSave(slotId);
+    }
+
+    importSave(slotId, file) {
+        if (SaveManager.importSave(slotId, file)) this.#loadGame(slotId);
+        else alert.error('Empty upload!');
+    }
 }

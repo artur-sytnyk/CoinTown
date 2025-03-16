@@ -40,7 +40,7 @@
     <label id="soundToggle" class="sound-button">
         <input type="checkbox" id="soundCheckbox" hidden>
         <span id="soundIcon">🕨</span>
-    </label>    
+    </label>
 
     <span id="offlineIndicator"></span>
 
@@ -49,14 +49,35 @@
             Saves
             <div class="save-slot">
                 <button id="saveSlotBtn1">Empty save</button>
+                <button id="exportSave1" class="ie-button hide">
+                    <img src="/assets/img/export.png" alt="export">
+                </button>
+                <label for="importSave1" class="ie-button">
+                    <img src="/assets/img/import.png" alt="import">
+                </label>
+                <input type="file" id="importSave1" class="file-input" style="display:none;">
                 <span id="deleteSave1">🗑</span>
             </div>
             <div class="save-slot">
                 <button id="saveSlotBtn2">Empty save</button>
+                <button id="exportSave2" class="ie-button hide">
+                    <img src="/assets/img/export.png" alt="export">
+                </button>
+                <label for="importSave2" class="ie-button">
+                    <img src="/assets/img/import.png" alt="import">
+                </label>
+                <input type="file" id="importSave2" class="file-input" style="display:none;">
                 <span id="deleteSave2">🗑</span>
             </div>
             <div class="save-slot">
                 <button id="saveSlotBtn3">Empty save</button>
+                <button id="exportSave3" class="ie-button hide">
+                    <img src="/assets/img/export.png" alt="export">
+                </button>
+                <label for="importSave3" class="ie-button">
+                    <img src="/assets/img/import.png" alt="import">
+                </label>
+                <input type="file" id="importSave3" class="file-input" style="display:none;">
                 <span id="deleteSave3">🗑</span>
             </div>
         </div>
@@ -76,7 +97,7 @@
         <div class="save-name-content">
             Name your town
             <div class="town-name">
-                <input id="townNameInput" type="text" placeholder="Little Towny"/>
+                <input id="townNameInput" type="text" placeholder="Little Towny" />
                 <span id="townNameRandomizer">🎲</span>
             </div>
             <button id="saveNameBtn">Save</button>
@@ -90,7 +111,7 @@
             <button id="zoomOutBtn">-</button>
         </div>
     </div>
-    
+
     <div class="buy-buttons-container">
         <button id="buyResidentBtn" class="green">
             Resident: <span id="rCost">0</span>&#x1FA99;

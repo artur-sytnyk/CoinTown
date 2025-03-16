@@ -45,7 +45,7 @@ export class ControllerManager {
         return this.game.getGameState();
     }
 
-    loadGameRomSave(gameState) {
+    loadGameFromSave(gameState) {
         this.game.loadFromState(gameState)
     }
 
@@ -73,6 +73,14 @@ export class ControllerManager {
         this.save.saveWithName(name);
     }
 
+    exportGame(slotId) {
+        this.save.exportSave(slotId);
+    }
+
+    importGame(slotId, file) {
+        this.save.importSave(slotId, file);
+    }
+
     // UI
     
     showSaveConfirmOverlay(message, confirmFunction) {
@@ -81,5 +89,9 @@ export class ControllerManager {
 
     showSaveNameFormOverlay() {
         this.ui.showSaveNameFormOverlay();
+    }
+
+    hideSaveSlotOverlay() {
+        this.ui.hideSaveSlotOverlay();
     }
 }
