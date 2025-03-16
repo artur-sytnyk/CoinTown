@@ -50,12 +50,13 @@ export class SaveController {
         SaveManager.save(this.#saveSlotId, this.#saveName, this.manager.getGameState());
         this.updateSaveSlots();
         this.manager.hideSaveSlotOverlay();
+        alert.success('Game saved');
     }
 
     #loadGame() {
         const data = SaveManager.load(this.#saveSlotId);
         if (!data) {
-            alert.error("Cannot load empty save");
+            alert.error("Save not found");
             return;
         }
         if (!data.name || !data.gameState) {
@@ -65,6 +66,7 @@ export class SaveController {
         this.#setName(data.name);
         this.manager.loadGameFromSave(data.gameState);
         this.manager.hideSaveSlotOverlay();
+        alert.info("Game save loaded");
     }
 
     saveWithName(name) {
@@ -75,6 +77,7 @@ export class SaveController {
     deleteGame(slotId) {
         SaveManager.delete(slotId);
         this.updateSaveSlots();
+        alert.info('Game save deleted');
     }
 
     initAction(slotId) {
@@ -120,9 +123,13 @@ export class SaveController {
         SaveManager.exportSave(slotId);
     }
 
-    importSave(slotId, file) {
-        this.#setSlotId(slotId);
-        if (SaveManager.importSave(slotId, file)) this.#loadGame();
-        else alert.error('Empty upload!');
+    async importSave(slotId, file) {
+        try {
+            const data = await SaveManager.importSave(slotId, file);
+            this.updateSaveSlots();
+            alert.success("Game imported");
+        } catch (errorMessage) {
+            alert.error(errorMessage);
+        }
     }
 }
