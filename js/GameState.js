@@ -39,6 +39,16 @@ export class GameState {
         this.#onCostsChange();
     }
 
+    toJSON() {
+        return {
+            coins: this.#coins,
+            nodeCosts: this.#nodeCosts,
+            size: this.#size,
+            mode: this.#mode,
+            nodes: this.#nodes.map(node => node.toJSON()),
+        };
+    }
+
     // ### ### ### ### ### Get Set ### ### ### ### ###
 
     get nodes() {
@@ -63,6 +73,10 @@ export class GameState {
 
     set mode(mode) {
         this.#mode = mode;
+    }
+
+    get nodeCosts() {
+        return this.#nodeCosts;
     }
 
     // ### ### ### ### ### Node functions ### ### ### ### ###

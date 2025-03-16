@@ -7,6 +7,7 @@ export class UIController {
 
     init() {
         this.#setupUIListeners();
+        this.#updateOnlineStatus();
     }
 
     showSaveConfirmOverlay(message, confirmFunction) {
@@ -22,13 +23,17 @@ export class UIController {
             confirmFunction();
         });
         noBtn.off('click').on('click', () => overlay.removeClass('show'));
-        $('#saveGamesOverlay').click();
     }
 
     showSaveNameFormOverlay() {
         $('#townNameInput').val("");
+        $('#townNameRandomizer').prop('disabled', !navigator.onLine);
         $('#saveNameFormOverlay').addClass('show');
         setTimeout(() => $('#townNameInput').focus(), 10);
+    }
+
+    hideSaveSlotOverlay() {
+        setTimeout(() => $('#saveGamesOverlay').click(), 50);
     }
 
     // ### ### ### ### ### Event Listeners ### ### ### ### ###
@@ -42,6 +47,7 @@ export class UIController {
         this.#setupBuyButtons();
         this.#setupSavesListeners();
         this.#setupSaveNameListeners();
+        this.#setupOnlineListeners();
     }
 
     #setupMusicToggle() {
@@ -121,6 +127,11 @@ export class UIController {
 
         ['1', '2', '3'].forEach(slotId => {
             $(`#saveSlotBtn${slotId}`).click(() => this.manager.saveAction(slotId));
+            $(`#exportSave${slotId}`).click(() => this.manager.exportGame(slotId));
+            $(`#importSave${slotId}`).change((event) => {
+                const file = event.target.files[0];
+                if (file) this.manager.importGame(slotId, file);
+            });
             $(`#deleteSave${slotId}`).click(() => this.#deleteGame(slotId));
         });
     }
@@ -163,5 +174,19 @@ export class UIController {
 
         saveBtn.prop('disabled', false);
         saveBtn.text("Save");
+    }
+
+    #setupOnlineListeners() {
+        window.addEventListener('online', () => this.#updateOnlineStatus());
+        window.addEventListener('offline', () => this.#updateOnlineStatus());
+    }
+
+    #updateOnlineStatus() {
+        const isOnline = navigator.onLine;
+        $('#offlineIndicator')
+            .css('display', isOnline ? 'none' : 'block');
+        $('#townNameRandomizer')
+            .css('pointer-events', isOnline ? 'auto' : 'none')
+            .toggleClass('disabled', !isOnline);
     }
 }

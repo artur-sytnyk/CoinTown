@@ -240,6 +240,20 @@ button.orange:hover {
 }
 
 
+/* ### ### ### Offline indicator ### ### ### */
+
+#offlineIndicator {
+    position: absolute;
+    top: 45px;
+    right: 16px;
+    width: 16px;
+    height: 16px;
+    background-color: red;
+    border-radius: 50%;
+    /* display: none; */
+}
+
+
 /* ### ### ### Help Text ### ### ### */
 
 .help-button {
@@ -340,16 +354,15 @@ button.orange:hover {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    /* box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2); */
     font-size: 1.5rem;
     text-align: center;
 }
 
 .save-slot {
-    display: flex;
+    display: grid;
+    grid-template-columns: 70% 10% 10% 10%; /* Adjusting the proportions for slot, import, export, and delete */
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+    gap: 0.5rem;
     margin-top: 0.5rem;
 }
 
@@ -391,6 +404,57 @@ button.orange:hover {
 
 .savegames-content span:hover {
     color: red;
+}
+
+button.ie-button {
+    background-color: transparent;
+    padding: 0;
+    min-width: 0;
+    border: none;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+button.ie-button img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+button.ie-button:hover {
+    background-color: transparent;
+}
+
+button.ie-button:hover img {
+    filter: invert(50%) sepia(100%) saturate(300%) hue-rotate(350deg);
+}
+
+label.ie-button {
+    display: inline-flex;
+    width: 26px;
+    height: 26px;  
+    margin-inline: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+label.ie-button img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+label.ie-button:hover img {
+    filter: invert(50%) sepia(100%) saturate(300%) hue-rotate(350deg);
+}
+
+.ie-button.hide {
+    display: none;
 }
 
 
@@ -455,22 +519,39 @@ button.orange:hover {
     padding: 4px 12px;
 }
 
+.save-name-content button {
+    padding: 1rem 2rem;
+}
+
 .save-name-content span {
     padding: 10px 8px;
     font-size: 1.3rem;
     border-radius: 50%;
     cursor: pointer;
     background-color: #ffe345;
+    position: relative;
 }
 
 .save-name-content span:hover {
     background-color: gold;
 }
 
-.save-name-content button {
-    padding: 1rem 2rem;
+.save-name-content span.disabled {
+    background-color: #ccc !important;
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
+.save-name-content span.disabled::after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    right: 0px;
+    width: 16px;
+    height: 16px;
+    background-color: red;
+    border-radius: 50%;
+}
 
 
 /* ### ### ### ### ### Resonsiveness ### ### ### ### ### */
@@ -562,6 +643,10 @@ button.orange:hover {
 }
 
 @media screen and (max-width: 576px) {
+    #offlineIndicator {
+        top: 40px;
+    }
+
     .game-display {
         font-size: 1rem;
     }
