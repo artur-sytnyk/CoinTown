@@ -15,12 +15,10 @@ export class SaveManager {
         }
         const data = JSON.stringify(saveObject);
         localStorage.setItem(this.#getKey(slotId), data);
-        alert.success('Game saved');
     }
 
     static delete(slotId) {
         localStorage.removeItem(this.#getKey(slotId));
-        alert.success('Game deleted');
     }
 
     static #getKey(slotId) {
@@ -38,14 +36,18 @@ export class SaveManager {
 
     static importSave(slotId, file) {
         const reader = new FileReader();
-        reader.onload = function () {
-            try {
-                localStorage.setItem('savegame' + slotId, reader.result);
-            } catch (e) {
-                alert.error('Invalid save file!');
-            }
-        };
-        reader.readAsText(file);
-        return true;
+        return new Promise((resolve, reject) => {
+            reader.onload = () => {
+                try {
+                    const dataString = reader.result
+                    localStorage.setItem('savegame' + slotId, dataString);
+                    resolve(JSON.parse(dataString));
+                } catch (e) {
+                    reject('Invalid save file');
+                }
+            };
+            reader.onerror = () => reject("Error reading file");
+            reader.readAsText(file);
+        });
     }
 }
