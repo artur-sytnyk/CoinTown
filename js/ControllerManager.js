@@ -57,6 +57,10 @@ export class ControllerManager {
 
     // Saves
 
+    updateSaveSlots(){
+        this.save.updateSaveSlots();
+    }
+
     setSaveAction(action) {
         this.save.setAction(action);
     }
