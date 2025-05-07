@@ -1,3 +1,5 @@
+# [Odkaz na hru](https://kaj-sytnyart-36dd05.pages.fel.cvut.cz/)
+
 # Coin Town
 
 **Coin town** je primitivní hra-simulace kde hráč postupně staví budovy tři typu a snaží se maximalizovat počet populace. Typy budov jsou – **residence**, **obchody** a **továrny**. Obchody a továrny jsou místa kde resident může pracovat. Továrny vyrábí produkt, který prodají obchodům, které ho prodají residentům. Resident chce za den, jak dostat zaplaceno, tak i něco nakoupit, obchod a továrna chtějí zaplatit pracovníkům za práci a prodat nějaké produkty. Pokud se nepovedou obě možnosti, budou nespokojení a mohou město opustit – zmizí.
