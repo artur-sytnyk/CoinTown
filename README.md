@@ -1,4 +1,4 @@
-# [Odkaz na hru](https://kaj-sytnyart-36dd05.pages.fel.cvut.cz/)
+# [Link to the game](https://kaj-sytnyart-36dd05.pages.fel.cvut.cz/)
 
 # Coin Town
 
