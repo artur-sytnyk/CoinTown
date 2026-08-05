@@ -86,7 +86,7 @@ export class GameState {
         this.#onNodeCountChange();
     }
 
-    #removeNode(node) {
+    removeNode(node) {
         node.connections.forEach(con => this.#removeConnection(con));
         this.#nodes = removeItem(this.#nodes, node);
         this.#onNodeCountChange();

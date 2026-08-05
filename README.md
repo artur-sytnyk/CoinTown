@@ -2,71 +2,64 @@
 
 # Coin Town
 
-**Coin town** je primitivní hra-simulace kde hráč postupně staví budovy tři typu a snaží se maximalizovat počet populace. Typy budov jsou – **residence**, **obchody** a **továrny**. Obchody a továrny jsou místa kde resident může pracovat. Továrny vyrábí produkt, který prodají obchodům, které ho prodají residentům. Resident chce za den, jak dostat zaplaceno, tak i něco nakoupit, obchod a továrna chtějí zaplatit pracovníkům za práci a prodat nějaké produkty. Pokud se nepovedou obě možnosti, budou nespokojení a mohou město opustit – zmizí.
-Hráč dostava zaplaceno denně podle počtu postavených budov.
+Coin Town is a browser-based city-building simulation game in which the player places three types of buildings on a canvas map and manages a simple economic flow of residents, shops, and factories. The goal is to grow population and income by balancing housing, employment, production, and trade.
 
-## Cíl projektu
+## About this project
 
-Cílem projektu je vytvořit hru, která umožní na platně stavit věci podle výběru a interagovat s daným plátnem – umožnit zoom a přetahování myší. Stavení je omezeno velikosti města, nemožnosti stavit uzly daleko od sebe anebo na sebe. Hra má svou rychlost běhu – 4 kroky do sekundy, ale dá se zrychlit tlačítkem. Rendering běží plynule. Hra má od začátku vypnutou hudbu na pozadí, ale da se zapínat a vypínat. Existuje možnost uložení a načtení stavu her – vybudovaných městeček. Uložení je provedeno pomoci LocalStorage.
+- Built the game simulation loop and building interaction logic.
+- Designed canvas-based map controls with zoom, pan, and drag-and-drop placement.
+- Added save/load management with LocalStorage, import/export JSON support, and offline-aware UI behavior.
 
-## Postup
+## Features
 
-- **Příprava struktury prvků:** Připraveno plátno (canvas) a tlačítka pro ovládání hry.
-- **Implementace plátna:** Vytvořeno plátno pro zobrazení uzlů.
-- **Přidání interaktivity:** Implementována funkce pro drag and drop uzlů a validace platnosti umístění.
-- **Rozdělení logiky:** Oddělena logika update hry a rendering plátna pro efektivní správu stavu a zobrazení.
-- **Herní logika uzlů:** Implementována logika pro umisťování a interakce mezi uzly.
-- **Ukládání herního stavu:** Přidáno ukládání herního stavu pro pokračování hry.
-- **Vylepšení:** Přidání menších funkcí, jako tlačítka pro hudbu a nápovědu.
-- **Refactor:** změny kódu, dekompozice, zapouzdření
-- **Pokročilé funkce:** Vylepšení uložení stavu her, jejich import a export, také reagování na offline stav uživatele
+- Place residential, commercial, and factory buildings on a movable canvas map.
+- Simulate residents finding jobs, buying products, and reacting to workplace/shop availability.
+- Save and load game states using multiple slots stored in LocalStorage.
+- Export and import save files as JSON.
+- Support audio toggle, help overlay, restart, and speed controls.
+- Offline detection disables random city-name generation and displays an offline indicator.
 
-## Popis funkčnosti
+## Technologies
 
-**Budovy:**
+- HTML
+- CSS
+- JavaScript (ES modules)
+- Canvas API
+- jQuery
+- LocalStorage
+- Web Audio API
 
-- Jsou dostupné, pokud hráč má na ně dostatek minci
-- Dají se umisťovat v rámci města, při rozmístění zobrazuji zóny vlivu – interakce mezi budovami
-- Při úspěšném rozmístěni budovy se cena na daný typ zvyšuje
+## Running locally
 
-**Canvas:**
+1. Open the project root in a browser, or serve it from a local static server.
+2. If you have Python installed, run from the repository directory:
 
-- Dá se přetahovat pomoci myší
-- Dá se měnit (viditelná) velikost jak myší, tak tlačítky
-- Zobrazuje zónu města
-- Zobrazí animaci budov při zisku minci nebo produktu
+   ```bash
+   python -m http.server 8000
+   ```
 
-**Start / speed:**
+3. Open `http://localhost:8000/` in your browser.
+4. Alternatively, open `index.html` directly in a browser.
 
-- Start/Stop tlačítko startuje nebo pozastaví běh simulace
-- Reaguje na “Space” neboli mezerník
-- Speed přepíná mezi rychlostmi 1, 2 a 4.
+## Project context
 
-**Otazníček (tlačítko):**
+Created as a university project at ČVUT, Coin Town is a frontend-only prototype that demonstrates interactive browser-based game mechanics, state management, and modular JavaScript architecture. The code is organized as a single-page application with no backend server or database.
 
-- Zobrazí nápovědu ke hře
-- Zobrazení na najeti i na klik, pak klikem schovat
+## Screenshots and documentation
 
-**Značka vypnutého zvuku:**
+The repository includes visual documentation in `docs/screenshots/` showcasing key gameplay and UI features:
 
-- Ovládací prvek na mute/unmute hudby v pozadí
-- (defaultně je na hlasitosti 0.2 ať nezabiji uši)
+- `animated_simulation.png` — gameplay simulation view and node animations.
+- `placement.png` — building placement and valid placement indicators.
+- `zoom_and_drag.png` — canvas pan and zoom controls.
+- `create_new_save.png` — saving a new game state.
+- `save_upload_download.png` — import/export save flow.
+- `help_text.png` — in-game help overlay.
 
-**Burger button / Menu:**
+## Notes
 
-- Uložit hru, kdy se pokaždé musí vybrat do kterého slotu nyní uložit
-- Při uložení do prázdného slotu je hráč vyzván k pojmenování města. U dané výzvy je tlačítko náhodného názvu pomoci API
-- Načíst hru – povolí vybrat slot, ze kterého má načíst uložený stav hry. Prázdny slot nic nenačte – vypíše hlášku.
-- Restart hry – neřeší aktuální hru, vytvoří novou čistou verzí se stejným nastavením
+- The app uses `index.html`, `styles.css`, and JavaScript modules under `js/`.
+- Save state is persisted in browser LocalStorage and can be exported/imported as JSON.
+- The game includes a help dialog, audio controls, and speed controls for simulation pacing.
+- Random town-name generation uses an external API when the browser is online.
 
-**offline stav:**
-
-- Hra naposlouchá zda uživatel je online
-- Zobrazí identifikaci offline stavu pomocí červeného kolečka
-- Nepovolí možnost náhodné generace názvu města při ukládání nové hry
-
-**Import a export:**
-
-- V pohledu save slotu hry jsou tlačítka pro export či import json souborů
-- Export hned vytvoří a stáhne json soubor uživateli
-- Import povolí uživateli vybrat soubor a nahrát ho do save slotu
